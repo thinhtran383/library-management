@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane prefHeight="755.0" prefWidth="847.0" stylesheets="@../../../primer-light.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.AuthorManagementController">
+   <children>
+      <TableView fx:id="tbAuthor" layoutY="80.0" onMouseClicked="#onSelected" prefHeight="248.0" prefWidth="847.0">
+        <columns>
+          <TableColumn fx:id="colAuthorId" prefWidth="229.33335030078888" text="Mã tác giả">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../img/tabel.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </TableColumn>
+          <TableColumn fx:id="colAuthorName" prefWidth="288.5" text="Tên tác giả">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../img/tabel.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </TableColumn>
+            <TableColumn fx:id="colAuthorAddress" prefWidth="329.5" text="Địa chỉ">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../img/tabel.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </TableColumn>
+        </columns>
+      </TableView>
+      <GridPane layoutX="252.0" layoutY="332.0" prefHeight="169.0" prefWidth="348.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="165.22216796875" minWidth="10.0" prefWidth="106.2222425672743" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="235.99997965494788" minWidth="10.0" prefWidth="235.99997965494788" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Mã tác giả:" />
+            <Label text="Tên tác giả:" GridPane.rowIndex="1" />
+            <Label text="Địa chỉ:" GridPane.rowIndex="2" />
+            <TextField fx:id="txtAuthorId" GridPane.columnIndex="1" />
+            <TextField fx:id="txtAuthorName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="txtAddress" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         </children>
+      </GridPane>
+      <Button layoutX="148.0" layoutY="577.0" mnemonicParsing="false" onAction="#onClickAdd" text="Thêm tác giả" />
+      <Button layoutX="311.0" layoutY="577.0" mnemonicParsing="false" onAction="#onClickUpdate" text="Cập nhật tác giả" />
+      <Button layoutX="486.0" layoutY="577.0" mnemonicParsing="false" onAction="#onClickDelete" text="Xoá tác giả" />
+      <Button layoutX="647.0" layoutY="577.0" mnemonicParsing="false" onAction="#onClickRefresh" text="Làm mới" />
+      <GridPane layoutX="32.0" layoutY="14.0" prefHeight="30.0" prefWidth="328.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="158.5" minWidth="10.0" prefWidth="94.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="234.0" minWidth="10.0" prefWidth="234.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Tìm kiếm:" />
+            <TextField fx:id="txtSearch" onKeyPressed="#onSearch" prefHeight="36.0" prefWidth="196.0" GridPane.columnIndex="1" />
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>

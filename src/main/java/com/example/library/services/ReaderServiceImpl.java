@@ -1,0 +1,30 @@
+package com.example.library.services;
+
+import com.example.library.models.Reader;
+import com.example.library.repositories.IReaderRepository;
+import com.example.library.repositories.ReaderRepositoryImpl;
+import javafx.collections.ObservableList;
+
+public class ReaderServiceImpl implements IReaderService {
+    private final IReaderRepository readerRepository;
+
+
+    public ReaderServiceImpl() {
+        this.readerRepository = new ReaderRepositoryImpl();
+    }
+
+    @Override
+    public ObservableList<Reader> getAllReaders() {
+        return readerRepository.getAllReaders();
+    }
+
+    @Override
+    public void saveReader(Reader reader) {
+        readerRepository.save(reader);
+    }
+
+    @Override
+    public void deleteReader(Reader reader) {
+        readerRepository.delete(reader);
+    }
+}
