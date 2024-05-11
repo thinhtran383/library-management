@@ -13,7 +13,6 @@ public interface IBookRepository {
 
     ObservableList<String> getAllCategoryName();
 
-    String getAuthorIdByName(String author);
 
     void increaseQuantity(String bookId);
     void decreaseQuantity(String bookId);

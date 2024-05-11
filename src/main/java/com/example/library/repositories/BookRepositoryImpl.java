@@ -155,21 +155,7 @@ public class BookRepositoryImpl implements IBookRepository {
         return result;
     }
 
-    @Override
-    public String getAuthorIdByName(String author) {
-        String sql = String.format("""
-                select authorId from authors where authorName = '%s';
-                """, author);
-        ResultSet rs = repo.executeQuery(sql);
-        try {
-            if (rs.next()) {
-                return rs.getString("authorId");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
+
 
     @Override
     public void increaseQuantity(String bookId) {

@@ -53,7 +53,7 @@ public class BookServiceImpl implements IBookService {
 
     private void setBook(Book book) {
         String categoryId = bookRepository.getCategoryIdByName(book.getCategory());
-        String authorId = bookRepository.getAuthorIdByName(book.getAuthor());
+        String authorId = authorRepository.getAuthorIdByName(book.getAuthor());
 
         if (categoryId == null) {
             bookRepository.saveCategory(book.getCategory());

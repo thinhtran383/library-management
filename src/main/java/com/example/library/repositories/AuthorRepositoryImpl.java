@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class AuthorRepositoryImpl implements IAuthorRepository {
     private final Repo repo = Repo.getInstance();
@@ -76,10 +77,14 @@ public class AuthorRepositoryImpl implements IAuthorRepository {
         );
 
         ResultSet rs = repo.executeQuery(sqlCheck);
-        if (rs != null) {
-            repo.executeUpdate(sqlUpdate);
-        } else {
-            repo.executeUpdate(sqlInsert);
+        try {
+            if (rs.next()) {
+                repo.executeUpdate(sqlUpdate);
+            } else {
+                repo.executeUpdate(sqlInsert);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -92,6 +97,22 @@ public class AuthorRepositoryImpl implements IAuthorRepository {
         );
         repo.executeUpdate(sql);
 
+    }
+
+    @Override
+    public String getAuthorIdByName(String author) {
+        String sql = String.format("""
+                select authorId from authors where authorName = '%s';
+                """, author);
+        ResultSet rs = repo.executeQuery(sql);
+        try {
+            if (rs.next()) {
+                return rs.getString("authorId");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
 }

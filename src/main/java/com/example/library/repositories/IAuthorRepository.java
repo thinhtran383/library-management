@@ -9,4 +9,6 @@ public interface IAuthorRepository {
 
     void save(Author author);
     void delete(Author author);
+    String getAuthorIdByName(String author);
+
 }
