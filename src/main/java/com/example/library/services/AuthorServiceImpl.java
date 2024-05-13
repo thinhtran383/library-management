@@ -32,4 +32,9 @@ public class AuthorServiceImpl implements IAuthorService {
     public void updateAuthor(Author author) {
         authorRepository.save(author);
     }
+
+    @Override
+    public String getAuthorId() {
+        return authorRepository.getAuthorId();
+    }
 }

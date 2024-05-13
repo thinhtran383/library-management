@@ -7,10 +7,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="409.0" prefWidth="646.0" stylesheets="@../../../primer-light.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.BorrowHistoryController">
+<AnchorPane prefHeight="456.0" prefWidth="777.0" stylesheets="@../../../primer-light.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.BorrowHistoryController">
    <children>
-      <TableView fx:id="tbBorrows" prefHeight="279.0" prefWidth="646.0">
+      <TableView fx:id="tbBorrows" prefHeight="279.0" prefWidth="777.0">
         <columns>
           <TableColumn fx:id="colBorrowId" prefWidth="75.0" text="ID">
                <graphic>
@@ -30,7 +29,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colBorrowDate" prefWidth="236.0" text="Ngày mượn">
+            <TableColumn fx:id="colBorrowDate" prefWidth="169.0" text="Ngày mượn">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -39,7 +38,16 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colReturnDate" prefWidth="229.0" text="Ngày hẹn trả">
+            <TableColumn fx:id="colReturnDate" prefWidth="225.5" text="Ngày hẹn trả">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../img/tabel.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </TableColumn>
+            <TableColumn fx:id="colDueDate" prefWidth="203.5" text="Ngày trả">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>

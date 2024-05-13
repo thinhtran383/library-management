@@ -33,6 +33,16 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
+    public ObservableList<String> getAllBookId() {
+        return bookRepository.getAllBookId();
+    }
+
+    @Override
+    public String getBookNameById(String bookId) {
+        return bookRepository.getBookNameById(bookId);
+    }
+
+    @Override
     public void saveBook(Book book) {
         setBook(book);
         bookRepository.save(book);
@@ -49,6 +59,11 @@ public class BookServiceImpl implements IBookService {
         setBook(book);
         bookRepository.save(book);
 
+    }
+
+    @Override
+    public String getBookId() {
+        return bookRepository.getBookId();
     }
 
     private void setBook(Book book) {

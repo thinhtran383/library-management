@@ -45,10 +45,10 @@ public class DashboardController implements Initializable {
                 frm = "/com/example/library/AuthorManagementFrm.fxml";
                 break;
             case "Quản lý mượn trả":
-                frm = "/fxml/Borrow.fxml";
+                frm = "/com/example/library/BorrowManagementFrm.fxml";
                 break;
             case "Thống kê":
-                frm = "/fxml/Statistic.fxml";
+                frm = "/com/example/library/StaticFrm.fxml";
                 break;
 
             default:

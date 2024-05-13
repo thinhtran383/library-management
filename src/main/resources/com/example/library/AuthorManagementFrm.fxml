@@ -59,14 +59,14 @@
             <Label text="Mã tác giả:" />
             <Label text="Tên tác giả:" GridPane.rowIndex="1" />
             <Label text="Địa chỉ:" GridPane.rowIndex="2" />
-            <TextField fx:id="txtAuthorId" GridPane.columnIndex="1" />
+            <TextField fx:id="txtAuthorId" editable="false" GridPane.columnIndex="1" />
             <TextField fx:id="txtAuthorName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="txtAddress" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
-      <Button layoutX="148.0" layoutY="577.0" mnemonicParsing="false" onAction="#onClickAdd" text="Thêm tác giả" />
-      <Button layoutX="311.0" layoutY="577.0" mnemonicParsing="false" onAction="#onClickUpdate" text="Cập nhật tác giả" />
-      <Button layoutX="486.0" layoutY="577.0" mnemonicParsing="false" onAction="#onClickDelete" text="Xoá tác giả" />
+      <Button fx:id="btnAdd" layoutX="148.0" layoutY="577.0" mnemonicParsing="false" onAction="#onClickAdd" text="Thêm tác giả" />
+      <Button fx:id="btnUpdate" layoutX="311.0" layoutY="577.0" mnemonicParsing="false" onAction="#onClickUpdate" text="Cập nhật tác giả" />
+      <Button fx:id="btnDelete" layoutX="486.0" layoutY="577.0" mnemonicParsing="false" onAction="#onClickDelete" text="Xoá tác giả" />
       <Button layoutX="647.0" layoutY="577.0" mnemonicParsing="false" onAction="#onClickRefresh" text="Làm mới" />
       <GridPane layoutX="32.0" layoutY="14.0" prefHeight="30.0" prefWidth="328.0">
         <columnConstraints>

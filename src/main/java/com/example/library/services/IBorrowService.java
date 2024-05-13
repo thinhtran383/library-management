@@ -5,5 +5,7 @@ import javafx.collections.ObservableList;
 
 public interface IBorrowService {
     ObservableList<Borrow> getBorrowByReaderId(String readerId);
-    void returnBook(String borrowId);
+    ObservableList<Borrow> getAllBookBorrowed();
+    void returnBook(Borrow borrow);
+    void borrowBook(Borrow borrow);
 }

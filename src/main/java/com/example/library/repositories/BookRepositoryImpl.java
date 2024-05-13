@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class BookRepositoryImpl implements IBookRepository {
@@ -133,7 +134,6 @@ public class BookRepositoryImpl implements IBookRepository {
     }
 
 
-
     @Override
     public ObservableList<String> getAllCategoryName() {
         ObservableList<String> result = FXCollections.observableArrayList();
@@ -155,6 +155,23 @@ public class BookRepositoryImpl implements IBookRepository {
         return result;
     }
 
+    @Override
+    public String getBookIdByName(String bookName) {
+        String sql = String.format("""
+                select bookId from books where bookName = '%s';
+                """, bookName);
+
+        ResultSet rs = repo.executeQuery(sql);
+
+        try {
+            if (rs.next()) {
+                return rs.getString("bookId");
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     @Override
@@ -171,5 +188,80 @@ public class BookRepositoryImpl implements IBookRepository {
                 update books set quantity = quantity - 1 where bookId = '%s';
                 """, bookId);
         repo.executeUpdate(sql);
+    }
+
+    @Override
+    public ObservableList<String> getAllBookId() {
+        ObservableList<String> result = FXCollections.observableArrayList();
+
+        String sql = """
+                select bookId from books where isDelete = false;
+                """;
+
+        ResultSet rs = repo.executeQuery(sql);
+
+        try {
+            while (rs.next()) {
+                String bookId = rs.getString("bookId");
+                result.add(bookId);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
+    }
+
+    @Override
+    public String getBookNameById(String bookId) {
+        String sql = String.format("""
+                select bookName from books where bookId = '%s' and isDelete = false;
+                """, bookId);
+
+        ResultSet rs = repo.executeQuery(sql);
+        try {
+            if (rs.next()) {
+                return rs.getString("bookName");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    @Override
+    public int getTotalBook() {
+        String sql = """
+                select SUM(QUANTITY) as total from books where isDelete = false;
+                """;
+
+        ResultSet rs = repo.executeQuery(sql);
+        try {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+
+    @Override
+    public String getBookId() {
+        String sql = "select count(*) from books";
+
+        ResultSet rs = repo.executeQuery(sql);
+        int id = getTotalBook() + 1;
+        try{
+            if(rs.next()){
+                id = rs.getInt(1);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        return String.format("BOO%d", id);
     }
 }

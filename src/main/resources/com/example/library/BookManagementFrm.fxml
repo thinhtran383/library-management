@@ -91,7 +91,7 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Book ID:" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tên sách:" GridPane.rowIndex="1" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tên tác giả:" GridPane.rowIndex="2" />
-            <TextField fx:id="txtBookId" GridPane.columnIndex="1" />
+            <TextField fx:id="txtBookId" editable="false" GridPane.columnIndex="1" />
             <TextField fx:id="txtBookName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <ComboBox fx:id="cbAuthor" prefHeight="36.0" prefWidth="226.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>

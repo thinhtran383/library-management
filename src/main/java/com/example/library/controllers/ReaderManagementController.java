@@ -22,6 +22,8 @@ import java.util.ResourceBundle;
 
 public class ReaderManagementController implements Initializable {
     @FXML
+    private TextField txtSearch;
+    @FXML
     private Button btnAdd;
     @FXML
     private Button btnDelete;
@@ -60,12 +62,18 @@ public class ReaderManagementController implements Initializable {
 
     public ReaderManagementController() {
         this.readerService = new ReaderServiceImpl();
+
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadReaders();
         customDatePicker();
+        txtReaderId.setText(readerService.getReaderId());
+
+        btnAdd.setVisible(true);
+        btnDelete.setVisible(false);
+        btnUpdate.setVisible(false);
     }
 
     public void loadReaders() {
@@ -90,6 +98,10 @@ public class ReaderManagementController implements Initializable {
             txtPhoneNumber.setText(selectedReader.get().getReaderPhone());
             dpDob.setValue(selectedReader.get().getReaderDOB());
             txtAddress.setText(selectedReader.get().getReaderAddress());
+
+            btnAdd.setVisible(false);
+            btnDelete.setVisible(true);
+            btnUpdate.setVisible(true);
         }
     }
 
@@ -185,10 +197,14 @@ public class ReaderManagementController implements Initializable {
         txtAddress.clear();
         txtEmail.clear();
         txtPhoneNumber.clear();
-        txtReaderId.clear();
         txtReaderName.clear();
         dpDob.setValue(null);
         tbReaders.getSelectionModel().clearSelection();
+        txtReaderId.setText(readerService.getReaderId());
+
+        btnAdd.setVisible(true);
+        btnDelete.setVisible(false);
+        btnUpdate.setVisible(false);
     }
 
     private boolean isNull(Object... o) {
@@ -216,7 +232,7 @@ public class ReaderManagementController implements Initializable {
     }
 
     public void onSearch(KeyEvent keyEvent) {
-        String keyword = txtReaderName.getText();
+        String keyword = txtSearch.getText();
 
         if (keyword.isEmpty()) {
             tbReaders.setItems(readerService.getAllReaders());

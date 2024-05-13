@@ -5,6 +5,9 @@ import javafx.collections.ObservableList;
 
 public interface IReaderService {
     ObservableList<Reader> getAllReaders();
+    ObservableList<String> getAllReaderId();
+    String getReaderNameById(String readerId);
     void saveReader(Reader reader);
     void deleteReader(Reader reader);
+    String getReaderId();
 }

@@ -15,4 +15,5 @@ public class Borrow {
     private String readerName;
     private LocalDate borrowDate;
     private LocalDate returnDate;
+    private String dueDate;
 }

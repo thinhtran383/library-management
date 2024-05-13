@@ -38,7 +38,6 @@ public class App extends Application {
         stage.setTitle(title);
 
         Stage parentStage = (Stage) scene.getWindow();
-        parentStage.setOpacity(0.95);
 
         stage.showAndWait();
     }

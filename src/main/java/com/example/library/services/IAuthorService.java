@@ -8,4 +8,5 @@ public interface IAuthorService {
     void saveAuthor(Author author);
     void deleteAuthor(Author author);
     void updateAuthor(Author author);
+    String getAuthorId();
 }

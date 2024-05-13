@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.random.RandomGenerator;
 
 public class AuthorRepositoryImpl implements IAuthorRepository {
     private final Repo repo = Repo.getInstance();
@@ -113,6 +114,24 @@ public class AuthorRepositoryImpl implements IAuthorRepository {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    @Override
+    public String getAuthorId() {
+        String sql = "select count(*) from authors";
+
+        int id = RandomGenerator.getDefault().nextInt();
+
+        ResultSet rs = repo.executeQuery(sql);
+
+        try{
+            if(rs.next()){
+                id = rs.getInt(1);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return String.format("Aut%d", id);
     }
 
 }

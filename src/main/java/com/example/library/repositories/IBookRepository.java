@@ -10,10 +10,12 @@ public interface IBookRepository {
     void saveCategory(String category);
     String getCategoryIdByName(String categoryName);
     ObservableList<Book> getAllBook();
-
     ObservableList<String> getAllCategoryName();
-
-
+    String getBookIdByName(String bookName);
     void increaseQuantity(String bookId);
     void decreaseQuantity(String bookId);
+    ObservableList<String> getAllBookId();
+    String getBookNameById(String bookId);
+    int getTotalBook();
+    String getBookId();
 }

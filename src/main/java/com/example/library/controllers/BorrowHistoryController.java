@@ -12,9 +12,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.Setter;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class BorrowHistoryController implements Initializable {
+    @FXML
+    private TableColumn colDueDate;
     @FXML
     private TableView<Borrow> tbBorrows;
     @FXML
@@ -30,7 +33,7 @@ public class BorrowHistoryController implements Initializable {
     private static String readerId;
     private final IBorrowService borrowService;
 
-    public BorrowHistoryController(){
+    public BorrowHistoryController() {
         this.borrowService = new BorrowServiceImpl();
     }
 
@@ -39,15 +42,23 @@ public class BorrowHistoryController implements Initializable {
         loadBorrows();
     }
 
-    private void loadBorrows(){
+    private void loadBorrows() {
         colBorrowId.setCellValueFactory(new PropertyValueFactory<>("borrowId"));
         colBookName.setCellValueFactory(new PropertyValueFactory<>("bookName"));
         colBorrowDate.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
         colReturnDate.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
+        colDueDate.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
 
         tbBorrows.setItems(borrowService.getBorrowByReaderId(readerId));
+
     }
 
     public void onClickReturn(ActionEvent actionEvent) {
+        Optional<Borrow> selectedBorrow = Optional.ofNullable(tbBorrows.getSelectionModel().getSelectedItem());
+
+        selectedBorrow.ifPresent(borrow -> {
+            borrowService.returnBook(borrow);
+            tbBorrows.setItems(borrowService.getBorrowByReaderId(readerId));
+        });
     }
 }

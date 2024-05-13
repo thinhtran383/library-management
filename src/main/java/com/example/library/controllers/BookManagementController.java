@@ -75,6 +75,13 @@ public class BookManagementController implements Initializable {
         loadBooksOnTable();
         initComboBox();
         customDatePicker();
+
+        btnAdd.setVisible(true);
+
+        btnDelete.setVisible(false);
+        btnUpdate.setVisible(false);
+
+        txtBookId.setText(bookService.getBookId());
     }
 
     private void customDatePicker() {
@@ -113,6 +120,12 @@ public class BookManagementController implements Initializable {
             txtQuantity.setText(String.valueOf(book.getQuantity()));
             dpPublish.setValue(book.getPublisher());
             cbAuthor.setValue(book.getAuthor());
+
+            btnAdd.setVisible(false);
+
+            btnDelete.setVisible(true);
+            btnUpdate.setVisible(true);
+
 
         });
 
@@ -203,6 +216,7 @@ public class BookManagementController implements Initializable {
     }
 
     public void onClickRefresh(ActionEvent actionEvent) {
+        clear();
     }
     public void onClickAddCategory(ActionEvent actionEvent) {
         if (isAddingCategory) {
@@ -234,13 +248,19 @@ public class BookManagementController implements Initializable {
     }
 
     private void clear(){
-        txtBookId.clear();
+        txtBookId.setText(bookService.getBookId());
         txtBookName.clear();
         txtCategory.clear();
         txtQuantity.clear();
         dpPublish.setValue(null);
         cbAuthor.setValue(null);
         tbBooks.getSelectionModel().clearSelection();
+
+        btnAdd.setVisible(true);
+
+        btnDelete.setVisible(false);
+        btnUpdate.setVisible(false);
+
     }
 
     private boolean isValid(String regex, String input) {

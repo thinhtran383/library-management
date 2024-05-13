@@ -88,7 +88,7 @@
             <Label text="Mã độc giả:" />
             <Label text="Tên độc giả:" GridPane.rowIndex="1" />
             <Label text="Email:" GridPane.rowIndex="2" />
-            <TextField fx:id="txtReaderId" GridPane.columnIndex="1" />
+            <TextField fx:id="txtReaderId" editable="false" GridPane.columnIndex="1" />
             <TextField fx:id="txtReaderName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
@@ -127,7 +127,7 @@
                </font>
             </Label>
             <TextField prefHeight="36.0" prefWidth="234.0" GridPane.columnIndex="1" />
-            <TextField onKeyPressed="#onSearch" GridPane.columnIndex="1" />
+            <TextField fx:id="txtSearch" onKeyPressed="#onSearch" GridPane.columnIndex="1" />
          </children>
       </GridPane>
       <Button fx:id="btnAdd" layoutX="146.0" layoutY="678.0" mnemonicParsing="false" onAction="#onClickAdd" text="Thêm độc giả" />
