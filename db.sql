@@ -51,6 +51,7 @@ create table borrow
     readerId   nvarchar(30),
     borrowDate date,
     returnDate date,
+    dueDate date,
     isDelete   bool default false
 );
 

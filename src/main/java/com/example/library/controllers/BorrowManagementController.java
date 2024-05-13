@@ -2,6 +2,7 @@ package com.example.library.controllers;
 
 import com.example.library.models.Borrow;
 import com.example.library.services.*;
+import com.example.library.utils.AlertUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -114,8 +115,10 @@ public class BorrowManagementController implements Initializable {
         if (selectedBorrow.isPresent()) {
             borrowService.borrowBook(selectedBorrow.get());
         } else {
-
-
+            if(isNull(cbReaderId.getValue(), cbBookId.getValue(), dpReturnDate.getValue())) {
+                AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Vui lòng nhập đầy đủ thông tin!");
+                return;
+            }
             Borrow borrow = Borrow.builder()
                     .readerName(cbReaderId.getValue())
                     .bookName(cbBookId.getValue())
@@ -125,6 +128,15 @@ public class BorrowManagementController implements Initializable {
 
         }
         tbBorrows.setItems(borrowService.getAllBookBorrowed());
+    }
+
+    private boolean isNull(Object... o) {
+        for (Object obj : o) {
+            if (obj == null || obj.toString().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void onSelected(MouseEvent mouseEvent) {

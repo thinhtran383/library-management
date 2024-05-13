@@ -191,6 +191,7 @@ public class ReaderManagementController implements Initializable {
 
         readerService.saveReader(reader);
         tbReaders.setItems(readerService.getAllReaders());
+        AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Thông báo", null, "Cập nhật độc giả thành công!");
     }
 
     public void onClickRefresh(ActionEvent actionEvent) {

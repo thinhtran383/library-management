@@ -127,6 +127,7 @@ public class AuthorManagementController implements Initializable {
 
             authorService.updateAuthor(author);
             tbAuthor.setItems(authorService.getAllAuthors());
+            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Thông báo", null, "Cập nhật tác giả thành công!");
         }
     }
 
