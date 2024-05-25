@@ -8,4 +8,6 @@ public interface IBorrowService {
     ObservableList<Borrow> getAllBookBorrowed();
     void returnBook(Borrow borrow);
     void borrowBook(Borrow borrow);
+
+    int getTotalBorrowByReaderId(String readerId);
 }

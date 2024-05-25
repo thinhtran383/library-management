@@ -1,5 +1,6 @@
 package com.example.library.services;
 
+import com.example.library.models.Author;
 import com.example.library.models.Book;
 import com.example.library.repositories.AuthorRepositoryImpl;
 import com.example.library.repositories.BookRepositoryImpl;
@@ -22,10 +23,6 @@ public class BookServiceImpl implements IBookService {
         return bookRepository.getAllBook();
     }
 
-    @Override
-    public ObservableList<String> getAllAuthorName() {
-        return authorRepository.getAllAuthorName();
-    }
 
     @Override
     public ObservableList<String> getAllCategoryName() {
@@ -35,6 +32,11 @@ public class BookServiceImpl implements IBookService {
     @Override
     public ObservableList<String> getAllBookId() {
         return bookRepository.getAllBookId();
+    }
+
+    @Override
+    public ObservableList<Author> getAllAuthors() {
+        return authorRepository.getAllAuthor();
     }
 
     @Override
@@ -75,8 +77,15 @@ public class BookServiceImpl implements IBookService {
             categoryId = bookRepository.getCategoryIdByName(book.getCategory());
         }
 
+        if(authorId == null){
+            bookRepository.saveAuthor(book.getAuthor());
+            authorId = authorRepository.getAuthorIdByName(book.getAuthor());
+        }
+
         book.setCategory(categoryId);
         book.setAuthor(authorId);
+
+        System.out.println(book);
 
     }
 

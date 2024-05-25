@@ -6,6 +6,5 @@ import java.util.Optional;
 
 public interface IAccountRepository {
     Optional<Account> getAccountByUsername(String username);
-
     void save(Account account);
 }

@@ -105,5 +105,6 @@
             <Label text="Lọc" />
          </children>
       </GridPane>
+      <Button layoutX="664.0" layoutY="631.0" mnemonicParsing="false" onAction="#onClickRefresh" prefHeight="36.0" prefWidth="102.0" text="Làm mới" />
    </children>
 </AnchorPane>

@@ -10,4 +10,7 @@ public interface IBorrowRepository {
     void save(Borrow borrow);
     int getTotalBorrow();
     int getTotalLate();
+    int getTotalReturn();
+
+    int getTotalBorrowByReaderId(String readerId);
 }

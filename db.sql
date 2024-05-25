@@ -1,14 +1,12 @@
-CREATE
-database library;
+CREATE database library;
+use library;
 
-use
-library;
+drop database library;
 
 create table authors
 (
-    authorId   nvarchar(30) primary key,
+    authorId   int auto_increment primary key,
     authorName nvarchar(30),
-    address    nvarchar(100),
     isDelete   bool default false
 );
 

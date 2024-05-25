@@ -51,4 +51,10 @@ public class BorrowServiceImpl implements IBorrowService {
         bookRepository.decreaseQuantity(borrow.getBookName());
     }
 
+    @Override
+    public int getTotalBorrowByReaderId(String readerId) {
+        return borrowRepository.getTotalBorrowByReaderId(readerId);
+    }
+
+
 }

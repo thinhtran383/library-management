@@ -16,16 +16,15 @@ public class BookRepositoryImpl implements IBookRepository {
     public void save(Book book) {
         String sql = String.format("""
                         insert into books(bookId, authorId, categoryId, bookName, quantity, publishDate)
-                        values ('%s', '%s', %d, '%s', %d, '%s');
+                        values ('%s', %d, %d, '%s', %d, '%s');
                         """,
                 book.getBookId(),
-                book.getAuthor(),
+                Integer.parseInt(book.getAuthor()),
                 Integer.parseInt(book.getCategory().trim()),
                 book.getBookName(),
                 book.getQuantity(),
                 book.getPublisher()
         );
-
         String sqlUpdate = String.format("""
                         update books set authorId = '%s', categoryId = %d, bookName = '%s', quantity = %d, publishDate = '%s'
                         where bookId = '%s';
@@ -76,6 +75,25 @@ public class BookRepositoryImpl implements IBookRepository {
         String sql = String.format("""
                 insert into categories(categoryName) values ('%s');
                 """, category);
+        repo.executeUpdate(sql);
+    }
+    @Override
+
+    public void saveAuthor(String author) {
+        String sqlCheck = String.format("""
+                select * from authors where authorName = '%s';
+                """, author);
+        ResultSet rs = repo.executeQuery(sqlCheck);
+        try {
+            if (rs.next()) {
+                return;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        String sql = String.format("""
+                insert into authors(authorName) values ('%s');
+                """, author);
         repo.executeUpdate(sql);
     }
 
@@ -262,6 +280,6 @@ public class BookRepositoryImpl implements IBookRepository {
         }
 
 
-        return String.format("BOO%d", id);
+        return String.format("B%03d", id);
     }
 }

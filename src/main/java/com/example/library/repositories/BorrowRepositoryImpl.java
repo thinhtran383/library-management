@@ -89,11 +89,11 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
                 select count(*) from borrow
                 """;
 
-        if(borrow.getBorrowId() == null){
+        if (borrow.getBorrowId() == null) {
             ResultSet rs = repo.executeQuery(sqlGetIndex);
             try {
-                if(rs.next()){
-                    borrowId = rs.getInt(1);
+                if (rs.next()) {
+                    borrowId = rs.getInt(1) + 1;
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -104,15 +104,8 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
 
         String sql = String.format(
                 """
-                        insert into borrow(borrowId,bookId, readerId, borrowDate, returnDate)
-                        values( %d,'%s', '%s', '%s', '%s')
-                        on duplicate key update
-                        borrowId = values(borrowId),
-                        bookId = values(bookId),
-                        readerId = values(readerId),
-                        borrowDate = values(borrowDate),
-                        returnDate = values(returnDate);
-                        
+                        insert into borrow(borrowId, bookId, readerId, borrowDate, returnDate)
+                        values ('%s', '%s', '%s', '%s', '%s');
                         """, borrowId, borrow.getBookName(), borrow.getReaderName(), LocalDate.now(), borrow.getReturnDate()
         );
 
@@ -148,6 +141,41 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
                 return rs.getInt("total");
             }
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getTotalReturn() {
+        String sql = """
+                select count(*) from borrow where dueDate is not null;
+                                """;
+        ResultSet rs = repo.executeQuery(sql);
+        try {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getTotalBorrowByReaderId(String readerId) {
+        String sql = String.format(
+                """
+                        select count(*) as total from borrow where readerId = '%s';
+                        """, readerId
+        );
+
+        ResultSet rs = repo.executeQuery(sql);
+        try {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return 0;

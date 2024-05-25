@@ -19,7 +19,7 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        lstMenu.getItems().addAll("Quản lý sách", "Quản lý độc giả", "Quản lý tác giả", "Quản lý mượn trả", "Thống kê");
+        lstMenu.getItems().addAll("Quản lý sách", "Quản lý độc giả", "Quản lý mượn trả", "Thống kê");
         lstMenu.getSelectionModel().selectFirst();
         loadPane(lstMenu.getSelectionModel().getSelectedItem());
     }
@@ -40,9 +40,6 @@ public class DashboardController implements Initializable {
                 break;
             case "Quản lý độc giả":
                 frm = "/com/example/library/ReaderManagementFrm.fxml";
-                break;
-            case "Quản lý tác giả":
-                frm = "/com/example/library/AuthorManagementFrm.fxml";
                 break;
             case "Quản lý mượn trả":
                 frm = "/com/example/library/BorrowManagementFrm.fxml";

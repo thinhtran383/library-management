@@ -8,6 +8,7 @@ public interface IBookRepository {
     void save(Book book);
     void delete(Book book);
     void saveCategory(String category);
+    void saveAuthor(String author);
     String getCategoryIdByName(String categoryName);
     ObservableList<Book> getAllBook();
     ObservableList<String> getAllCategoryName();

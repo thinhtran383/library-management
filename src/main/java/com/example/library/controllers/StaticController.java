@@ -15,6 +15,7 @@ public class StaticController implements Initializable {
     public Text txtTotalLate;
 
     private final IStaticService staticService;
+    public Text txtNumberReturn;
 
     public StaticController() {
         staticService = new StaticServiceImpl();
@@ -26,5 +27,6 @@ public class StaticController implements Initializable {
         txtTotalBorrow.setText(String.valueOf(staticService.getTotalBorrow()));
         txtTotalQuantityBook.setText(String.valueOf(staticService.getTotalBook()));
         txtTotalLate.setText(String.valueOf(staticService.getTotalLate()));
+        txtNumberReturn.setText(String.valueOf(staticService.getTotalReturn()));
     }
 }

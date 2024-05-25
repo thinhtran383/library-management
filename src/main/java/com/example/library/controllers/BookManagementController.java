@@ -1,6 +1,7 @@
 package com.example.library.controllers;
 
 import com.example.library.common.Regex;
+import com.example.library.models.Author;
 import com.example.library.models.Book;
 import com.example.library.services.BookServiceImpl;
 import com.example.library.services.IBookService;
@@ -20,6 +21,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class BookManagementController implements Initializable {
+    @FXML
+    private TextField txtAuthor;
+    @FXML
+    private Button btnAddAuthor;
     @FXML
     private TextField txtSearch;
     @FXML
@@ -63,6 +68,7 @@ public class BookManagementController implements Initializable {
 
     private final IBookService bookService;
     private boolean isAddingCategory = false;
+    private boolean isAddingAuthor = false;
 
     public BookManagementController() {
         this.bookService = new BookServiceImpl();
@@ -72,6 +78,10 @@ public class BookManagementController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         txtCategory.setVisible(false);
         cbCategory.setVisible(true);
+
+        txtAuthor.setVisible(false);
+        cbAuthor.setVisible(true);
+
         loadBooksOnTable();
         initComboBox();
         customDatePicker();
@@ -95,8 +105,8 @@ public class BookManagementController implements Initializable {
     }
 
     private void initComboBox() {
-        cbAuthor.getItems().addAll(bookService.getAllAuthorName());
         cbCategory.getItems().addAll(bookService.getAllCategoryName());
+        bookService.getAllAuthors().forEach(author -> cbAuthor.getItems().add(author.getAuthorName()));
     }
 
     private void loadBooksOnTable() {
@@ -137,7 +147,7 @@ public class BookManagementController implements Initializable {
         String category = txtCategory.getText().isBlank() ? cbCategory.getValue() : txtCategory.getText();
         String quantity = txtQuantity.getText();
         LocalDate publishDate = dpPublish.getValue();
-        String author = cbAuthor.getValue();
+        String author = txtAuthor.getText().isBlank() ? cbAuthor.getValue() : txtAuthor.getText();
 
         // validate
         if(!isValid(Regex.INTEGER_NUMBER, quantity)){
@@ -151,6 +161,10 @@ public class BookManagementController implements Initializable {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Hãy điền đầy đủ thông tin sách!");
             return;
         }
+
+
+
+
         Book book = Book.builder()
                 .bookId(bookId)
                 .bookName(bookName)
@@ -237,6 +251,23 @@ public class BookManagementController implements Initializable {
 
     }
 
+    public void onClickAddAuthor(ActionEvent actionEvent) {
+        if(isAddingAuthor){
+            txtAuthor.setVisible(false);
+            cbAuthor.setVisible(true);
+            txtAuthor.clear();
+            btnAddAuthor.setText("Thêm mới");
+            cbAuthor.getItems().clear();
+            cbAuthor.getItems().addAll();
+        } else {
+            txtAuthor.setVisible(true);
+            cbAuthor.setVisible(false);
+            cbAuthor.getSelectionModel().clearSelection();
+            btnAddAuthor.setText("Hủy");
+        }
+        isAddingAuthor = !isAddingAuthor;
+    }
+
 
     private boolean isNull(Object... objects) {
         for (Object obj : objects) {
@@ -272,7 +303,6 @@ public class BookManagementController implements Initializable {
         String keyword = txtSearch.getText();
         if(keyword.isEmpty()){
             tbBooks.setItems(bookService.getAllBook());
-            return;
         } else {
             tbBooks.setItems(bookService.getAllBook().filtered(book -> {
                 // search by bookId, bookName, author, category
@@ -283,4 +313,6 @@ public class BookManagementController implements Initializable {
             }));
         }
     }
+
+
 }

@@ -6,8 +6,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane prefHeight="755.0" prefWidth="847.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.StaticController">
+<AnchorPane prefHeight="755.0" prefWidth="862.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.StaticController">
    <children>
       <TextArea layoutX="438.0" layoutY="61.0" prefHeight="102.0" prefWidth="189.0" style="-fx-background-color: #b3b88a;" />
       <TextArea layoutX="230.0" layoutY="60.0" prefHeight="102.0" prefWidth="189.0" style="-fx-background-color: #629c6b;" />
@@ -37,7 +36,7 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="453.0" layoutY="122.0" text="Sách đang được mượn">
+      <Label layoutX="453.0" layoutY="122.0" text="Tổng số lượt mượn">
          <font>
             <Font size="16.0" />
          </font>
@@ -49,6 +48,17 @@
          </font>
       </Text>
       <Label layoutX="665.0" layoutY="122.0" text="Sách mượn quá hạn">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <TextArea layoutX="24.0" layoutY="200.0" prefHeight="102.0" prefWidth="189.0" style="-fx-background-color: #629c6b;" />
+      <Text fx:id="txtNumberReturn" layoutX="35.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="135.47002410888672">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Text>
+      <Label layoutX="37.0" layoutY="259.0" text="Tổng sách đã trả">
          <font>
             <Font size="16.0" />
          </font>

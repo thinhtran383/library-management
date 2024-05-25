@@ -110,23 +110,27 @@ public class BorrowManagementController implements Initializable {
     }
 
     public void onClickBorrow(ActionEvent actionEvent) {
-        Optional<Borrow> selectedBorrow = Optional.ofNullable(tbBorrows.getSelectionModel().getSelectedItem());
 
-        if (selectedBorrow.isPresent()) {
-            borrowService.borrowBook(selectedBorrow.get());
-        } else {
-            if(isNull(cbReaderId.getValue(), cbBookId.getValue(), dpReturnDate.getValue())) {
-                AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Vui lòng nhập đầy đủ thông tin!");
-                return;
-            }
-            Borrow borrow = Borrow.builder()
-                    .readerName(cbReaderId.getValue())
-                    .bookName(cbBookId.getValue())
-                    .returnDate(dpReturnDate.getValue())
-                    .build();
-            borrowService.borrowBook(borrow);
-
+        if(isNull(cbReaderId.getValue(), cbBookId.getValue(), dpReturnDate.getValue())){
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Vui lòng chọn độc giả, sách và ngày trả");
+            return;
         }
+
+        if(borrowService.getTotalBorrowByReaderId(cbReaderId.getValue()) >= 3){
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Độc giả đã mượn quá số lượng cho phép (<=3)");
+            return;
+        }
+
+        Borrow borrow = Borrow.builder()
+                .bookName(cbBookId.getValue())
+                .readerName(cbReaderId.getValue())
+                .borrowDate(LocalDate.now())
+                .returnDate(dpReturnDate.getValue())
+                .dueDate(null)
+                .build();
+
+        borrowService.borrowBook(borrow);
+        AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Thông báo", null, "Mượn sách thành công");
         tbBorrows.setItems(borrowService.getAllBookBorrowed());
     }
 
@@ -157,7 +161,7 @@ public class BorrowManagementController implements Initializable {
                 LocalDate today = LocalDate.now();
                 borrows = borrows.filtered(borrow -> {
                     String returnDate = String.valueOf(borrow.getReturnDate());
-                    return borrow.getDueDate() == null  && returnDate != null && !returnDate.isEmpty() && LocalDate.parse(returnDate).isBefore(today);
+                    return returnDate != null && !returnDate.isEmpty() && LocalDate.parse(returnDate).isBefore(today);
                 });
                 break;
             default:
@@ -165,5 +169,15 @@ public class BorrowManagementController implements Initializable {
         }
 
         tbBorrows.setItems(borrows);
+    }
+
+    public void onClickRefresh(ActionEvent actionEvent) {
+        tbBorrows.getSelectionModel().clearSelection();
+        cbFilterLate.getSelectionModel().selectLast();
+        cbBookId.getSelectionModel().clearSelection();
+        cbReaderId.getSelectionModel().clearSelection();
+        dpReturnDate.setValue(null);
+        lbBookName.setText("Tên sách");
+        lbReaderName.setText("Tên độc giả");
     }
 }

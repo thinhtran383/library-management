@@ -5,4 +5,5 @@ public interface IStaticService {
     int getTotalReader();
     int getTotalBorrow();
     int getTotalLate();
+    int getTotalReturn();
 }

@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class Author {
     private String authorId;
     private String authorName;
-    private String address;
 }

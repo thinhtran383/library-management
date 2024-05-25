@@ -3,6 +3,8 @@ package com.example.library.services;
 import com.example.library.repositories.*;
 
 public class StaticServiceImpl implements IStaticService {
+
+
     private final IReaderRepository readerRepository;
     private final IBorrowRepository borrowRepository;
     private final IBookRepository bookRepository;
@@ -25,7 +27,6 @@ public class StaticServiceImpl implements IStaticService {
 
     @Override
     public int getTotalBorrow() {
-
         return borrowRepository.getTotalBorrow();
     }
 
@@ -34,6 +35,9 @@ public class StaticServiceImpl implements IStaticService {
         return borrowRepository.getTotalLate();
     }
 
-
+    @Override
+    public int getTotalReturn() {
+        return borrowRepository.getTotalReturn();
+    }
 
 }

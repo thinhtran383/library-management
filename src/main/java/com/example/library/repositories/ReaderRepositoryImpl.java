@@ -126,17 +126,17 @@ public class ReaderRepositoryImpl implements IReaderRepository {
     public String getReaderIdByName(String readerName) {
         String sql = String.format(
                 """
-                       select readerId from readers where readerName = '%s' and isDelete = false;
-                        """, readerName
+                        select readerId from readers where readerName = '%s' and isDelete = false;
+                         """, readerName
         );
 
         ResultSet rs = repo.executeQuery(sql);
 
-        try{
-            if(rs.next()){
+        try {
+            if (rs.next()) {
                 return rs.getString("readerId");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -163,19 +163,19 @@ public class ReaderRepositoryImpl implements IReaderRepository {
     public String getReaderId() {
         String sql = "select count(*) from readers";
 
-        int id = RandomGenerator.getDefault().nextInt();
+        int id = 0;
 
         ResultSet rs = repo.executeQuery(sql);
 
-        try{
-            if(rs.next()){
-                id = rs.getInt(1);
+        try {
+            if (rs.next()) {
+                id = rs.getInt(1) + 1;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return String.format("Rea%d",id);
+        return String.format("R%03d", id);
     }
 }
 
