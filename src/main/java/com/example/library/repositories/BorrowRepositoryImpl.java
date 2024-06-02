@@ -166,7 +166,7 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
     public int getTotalBorrowByReaderId(String readerId) {
         String sql = String.format(
                 """
-                        select count(*) as total from borrow where readerId = '%s';
+                        select count(*) as total from borrow where readerId = '%s' and dueDate is null;
                         """, readerId
         );
 
