@@ -149,7 +149,12 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
     @Override
     public int getTotalReturn() {
         String sql = """
-                select count(*) from borrow where dueDate is not null;
+                SELECT COUNT(*) AS total_books_returned_on_time
+                FROM borrow
+                WHERE dueDate IS NOT NULL
+                  AND dueDate <= returnDate
+                  AND isDelete = false;
+                                
                                 """;
         ResultSet rs = repo.executeQuery(sql);
         try {

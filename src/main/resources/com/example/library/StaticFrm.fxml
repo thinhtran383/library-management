@@ -41,7 +41,7 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <TextArea layoutX="654.0" layoutY="60.0" prefHeight="102.0" prefWidth="200.0" style="-fx-background-color: #c47666;" />
+      <TextArea layoutX="654.0" layoutY="60.0" onMouseClicked="#onClickReturnLate" prefHeight="102.0" prefWidth="200.0" style="-fx-background-color: #c47666;" />
       <Text fx:id="txtTotalLate" layoutX="665.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="135.47002410888672">
          <font>
             <Font size="35.0" />
@@ -52,13 +52,13 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <TextArea layoutX="24.0" layoutY="200.0" prefHeight="102.0" prefWidth="189.0" style="-fx-background-color: #629c6b;" />
-      <Text fx:id="txtNumberReturn" layoutX="35.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="135.47002410888672">
+      <TextArea layoutX="24.0" layoutY="200.0" onMouseClicked="#onClickReturnOnTime" prefHeight="102.0" prefWidth="189.0" style="-fx-background-color: #629c6b;" />
+      <Text fx:id="txtNumberReturn" layoutX="37.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="117.5">
          <font>
             <Font size="35.0" />
          </font>
       </Text>
-      <Label layoutX="37.0" layoutY="259.0" text="Tổng sách đã trả">
+      <Label layoutX="37.0" layoutY="259.0" text="Lượt trả đúng hạn">
          <font>
             <Font size="16.0" />
          </font>

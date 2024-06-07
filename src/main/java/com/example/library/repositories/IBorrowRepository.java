@@ -11,6 +11,6 @@ public interface IBorrowRepository {
     int getTotalBorrow();
     int getTotalLate();
     int getTotalReturn();
-
     int getTotalBorrowByReaderId(String readerId);
+
 }

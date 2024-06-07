@@ -282,4 +282,25 @@ public class BookRepositoryImpl implements IBookRepository {
 
         return String.format("B%03d", id);
     }
+
+    @Override
+    public int getBookQuantity(String bookId) {
+        String sql = String.format(
+                """
+                        select quantity from books where bookId = '%s';
+                        """, bookId
+        );
+
+        ResultSet rs = repo.executeQuery(sql);
+        try {
+            if (rs.next()) {
+                return rs.getInt("quantity");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+
+
 }

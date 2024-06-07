@@ -68,6 +68,12 @@ public class BookServiceImpl implements IBookService {
         return bookRepository.getBookId();
     }
 
+    @Override
+    public boolean isQuantityEnough(String bookId) {
+        System.out.println(bookRepository.getBookQuantity(bookId));
+        return bookRepository.getBookQuantity(bookId) > 0;
+    }
+
     private void setBook(Book book) {
         String categoryId = bookRepository.getCategoryIdByName(book.getCategory());
         String authorId = authorRepository.getAuthorIdByName(book.getAuthor());

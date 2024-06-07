@@ -14,4 +14,5 @@ public interface IBookService {
     void deleteBook(Book book);
     void updateBook(Book book);
     String getBookId();
+    boolean isQuantityEnough(String bookId);
 }

@@ -3,7 +3,7 @@ package com.example.library.controllers;
 import com.example.library.models.Borrow;
 import com.example.library.services.*;
 import com.example.library.utils.AlertUtil;
-import javafx.collections.FXCollections;
+import com.example.library.utils.SettingUtils;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -49,11 +49,14 @@ public class BorrowManagementController implements Initializable {
     private final IBorrowService borrowService;
     private final IBookService bookService;
     private final IReaderService readerService;
+    private final SettingUtils settingUtils = SettingUtils.getInstance();
 
     public BorrowManagementController() {
         borrowService = new BorrowServiceImpl();
         bookService = new BookServiceImpl();
         readerService = new ReaderServiceImpl();
+
+
     }
 
     @Override
@@ -61,6 +64,43 @@ public class BorrowManagementController implements Initializable {
         loadBorrows();
         initComboBox();
         customDatePickers();
+
+        tbBorrows.setRowFactory(tv -> new TableRow<Borrow>() {
+            @Override
+            protected void updateItem(Borrow borrow, boolean empty) {
+                super.updateItem(borrow, empty);
+                if (borrow == null) {
+                    setStyle("");
+                } else {
+                    if (borrow.getDueDate() != null && settingUtils.isHighlightReturn()) {
+                        setStyle("-fx-background-color: green");
+                    } else {
+                        setStyle("");
+                    }
+                    if (borrow.getDueDate() == null && borrow.getReturnDate().isBefore(LocalDate.now()) && settingUtils.isHighlightLate()) {
+                        setStyle("-fx-background-color: red;");
+                    }
+                }
+            }
+        });
+
+//        tbBorrows.setRowFactory(tv -> new TableRow<Borrow>() {
+//            @Override
+//            protected void updateItem(Borrow borrow, boolean empty) {
+//                super.updateItem(borrow, empty);
+//                if (borrow == null || empty) {
+//                    setStyle("");
+//                } else {
+//                    LocalDate now = LocalDate.now();
+//                    if ((borrow.getDueDate() == null && borrow.getReturnDate().isBefore(now)) && settingUtils.isHighlightLate()) {
+//                        setStyle("-fx-background-color: red;");
+//                    } else {
+//                        setStyle("");
+//                    }
+//                }
+//            }
+//        });
+
     }
 
     private void initComboBox() {
@@ -118,6 +158,11 @@ public class BorrowManagementController implements Initializable {
 
         if(borrowService.getTotalBorrowByReaderId(cbReaderId.getValue()) >= 3){
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Độc giả đã mượn quá số lượng cho phép (<=3)");
+            return;
+        }
+
+        if(!bookService.isQuantityEnough(cbBookId.getValue())){
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Số lượng sách không đủ");
             return;
         }
 

@@ -19,4 +19,5 @@ public interface IBookRepository {
     String getBookNameById(String bookId);
     int getTotalBook();
     String getBookId();
+    int getBookQuantity(String bookId);
 }
