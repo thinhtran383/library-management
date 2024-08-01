@@ -19,6 +19,7 @@ public class BorrowServiceImpl implements IBorrowService {
 
     @Override
     public ObservableList<Borrow> getBorrowByReaderId(String readerId) {
+
         return borrowRepository.getBorrowByReaderId(readerId);
     }
 

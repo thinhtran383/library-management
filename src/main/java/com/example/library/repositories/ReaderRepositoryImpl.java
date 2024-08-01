@@ -6,7 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
-import java.util.random.RandomGenerator;
+import java.util.Optional;
 
 public class ReaderRepositoryImpl implements IReaderRepository {
     private final Repo repo = Repo.getInstance();
@@ -176,6 +176,32 @@ public class ReaderRepositoryImpl implements IReaderRepository {
         }
 
         return String.format("R%03d", id);
+    }
+
+    @Override
+    public Optional<Reader> getReaderById(String id){
+        String sql = String.format("""
+                select * from readers where readerId = '%s' and isDelete = false;
+                """, id);
+
+        ResultSet rs = repo.executeQuery(sql);
+
+        try {
+            if(rs.next()){
+                return Optional.ofNullable(Reader.builder()
+                        .readerId(rs.getString("readerId"))
+                        .readerName(rs.getString("readerName"))
+                        .readerEmail(rs.getString("readerEmail"))
+                        .readerPhone(rs.getString("readerPhoneNumber"))
+                        .readerDOB(rs.getDate("readerDOB").toLocalDate())
+                        .readerAddress(rs.getString("address"))
+                        .build());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
 }
 

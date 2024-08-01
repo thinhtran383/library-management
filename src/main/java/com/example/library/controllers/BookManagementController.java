@@ -71,11 +71,11 @@ public class BookManagementController implements Initializable {
     private boolean isAddingAuthor = false;
 
     public BookManagementController() {
-        this.bookService = new BookServiceImpl();
+        this.bookService = new BookServiceImpl(); // dependency injection
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize(URL url, ResourceBundle resourceBundle) { // khoi tao ban dau
         txtCategory.setVisible(false);
         cbCategory.setVisible(true);
 
@@ -142,6 +142,9 @@ public class BookManagementController implements Initializable {
     }
 
     public void onClickAdd(ActionEvent actionEvent) {
+     
+        
+        
         String bookId = txtBookId.getText();
         String bookName = txtBookName.getText();
         String category = txtCategory.getText().isBlank() ? cbCategory.getValue() : txtCategory.getText();

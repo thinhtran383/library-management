@@ -4,7 +4,8 @@ import com.example.library.models.Reader;
 import com.example.library.repositories.IReaderRepository;
 import com.example.library.repositories.ReaderRepositoryImpl;
 import javafx.collections.ObservableList;
-import org.w3c.dom.ls.LSOutput;
+
+import java.util.Optional;
 
 public class ReaderServiceImpl implements IReaderService {
     private final IReaderRepository readerRepository;
@@ -43,6 +44,11 @@ public class ReaderServiceImpl implements IReaderService {
     public String getReaderId() {
         return readerRepository.getReaderId();
     }
+
+    public Optional<Reader> getReaderById(String readerId) {
+        return readerRepository.getReaderById(readerId);
+    }
+
 
 
 }
