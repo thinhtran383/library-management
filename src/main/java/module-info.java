@@ -13,4 +13,7 @@ module com.example.library {
     exports com.example.library;
     exports com.example.library.controllers;
     exports com.example.library.models;
+    exports com.example.library.services;
+    exports com.example.library.utils;
+    exports com.example.library.repositories;
 }

@@ -38,8 +38,6 @@ public class BookManagementController implements Initializable {
     @FXML
     private Button btnUpdate;
     @FXML
-    private Button btnRefresh;
-    @FXML
     private TextField txtBookId;
     @FXML
     private TextField txtBookName;
@@ -142,9 +140,6 @@ public class BookManagementController implements Initializable {
     }
 
     public void onClickAdd(ActionEvent actionEvent) {
-     
-        
-        
         String bookId = txtBookId.getText();
         String bookName = txtBookName.getText();
         String category = txtCategory.getText().isBlank() ? cbCategory.getValue() : txtCategory.getText();
