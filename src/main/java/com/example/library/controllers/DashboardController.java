@@ -1,5 +1,6 @@
 package com.example.library.controllers;
 
+import com.example.library.utils.UserContext;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,7 +20,21 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        lstMenu.getItems().addAll("Quản lý sách", "Quản lý độc giả", "Quản lý mượn trả", "Thống kê");
+//        lstMenu.getItems().addAll("Quản lý sách", "Quản lý độc giả", "Quản lý mượn trả", "Thống kê");
+//        lstMenu.getSelectionModel().selectFirst();
+//        loadPane(lstMenu.getSelectionModel().getSelectedItem());
+        initMenuByRole(UserContext.getInstance().getRole());
+    }
+
+    public void initMenuByRole(String role){
+        if(role.equalsIgnoreCase("reader")){
+            lstMenu.getItems().addAll("Information", "Available book", "History borrow", "Request borrow");
+        }
+
+        if(role.equalsIgnoreCase("librarian")){
+            lstMenu.getItems().addAll("Book management", "Reader management", "Borrow management", "Request management", "Statistical");
+        }
+
         lstMenu.getSelectionModel().selectFirst();
         loadPane(lstMenu.getSelectionModel().getSelectedItem());
     }
@@ -35,19 +50,29 @@ public class DashboardController implements Initializable {
         String frm = "";
 
         switch (selected) {
-            case "Quản lý sách":
+            case "Book management":
                 frm = "/com/example/library/BookManagementFrm.fxml";
                 break;
-            case "Quản lý độc giả":
+            case "Reader management":
                 frm = "/com/example/library/ReaderManagementFrm.fxml";
                 break;
-            case "Quản lý mượn trả":
+            case "Borrow management":
                 frm = "/com/example/library/BorrowManagementFrm.fxml";
                 break;
-            case "Thống kê":
+            case "Statistical":
                 frm = "/com/example/library/StaticFrm.fxml";
                 break;
 
+                // client
+            case "Available book":
+                frm = "/com/example/library/BookManagementFrm.fxml";
+                break;
+            case "Information":
+                frm = "/com/example/library/InformationFrm.fxml";
+                break;
+            case "History borrow":
+                frm = "/com/example/library/BorrowHistoryFrm.fxml";
+                BorrowHistoryController.setReaderId(UserContext.getInstance().getReaderId());
             default:
                 break;
         }

@@ -37,7 +37,6 @@ public class App extends Application {
         stage.setScene(newScene);
         stage.setTitle(title);
 
-        Stage parentStage = (Stage) scene.getWindow();
 
         stage.showAndWait();
     }

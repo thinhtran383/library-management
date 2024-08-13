@@ -58,6 +58,6 @@
             </TableColumn>
         </columns>
       </TableView>
-      <Button layoutX="297.0" layoutY="317.0" mnemonicParsing="false" onAction="#onClickReturn" text="Trả sách" />
+      <Button fx:id="btnReturn" layoutX="297.0" layoutY="317.0" mnemonicParsing="false" onAction="#onClickReturn" text="Trả sách" />
    </children>
 </AnchorPane>

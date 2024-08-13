@@ -3,6 +3,7 @@ package com.example.library.repositories;
 import com.example.library.models.Reader;
 import javafx.collections.ObservableList;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 public interface IReaderRepository {
@@ -15,4 +16,8 @@ public interface IReaderRepository {
     int getTotalReader();
     String getReaderId();
     Optional<Reader> getReaderById(String readerId);
+    boolean isExistReaderPhoneNumber(String readerPhoneNumber);
+    boolean isExistReaderEmail(String readerEmail);
+
+    Reader getReaderByUsername(String username);
 }

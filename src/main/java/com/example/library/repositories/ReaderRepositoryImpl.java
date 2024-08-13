@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class ReaderRepositoryImpl implements IReaderRepository {
@@ -40,45 +41,56 @@ public class ReaderRepositoryImpl implements IReaderRepository {
 
     @Override
     public void save(Reader reader) {
-        String sqlInsert = String.format("""
-                insert into readers(readerId, readerName, readerEmail, readerPhoneNumber, readerDob, address) values('%s','%s','%s','%s','%s','%s');
-                 """, reader.getReaderId(), reader.getReaderName(), reader.getReaderEmail(), reader.getReaderPhone(), reader.getReaderDOB(), reader.getReaderAddress());
-
-        String sqlUpdate = String.format(
-                """
-                        update readers set
-                        readerName = '%s',
-                        readerEmail = '%s',
-                        readerPhoneNumber = '%s',
-                        readerDOB = '%s',
-                        address = '%s'
-                        where readerId = '%s';
-                                     
-                        """, reader.getReaderName(), reader.getReaderEmail(), reader.getReaderPhone(), reader.getReaderDOB(), reader.getReaderAddress(), reader.getReaderId());
-
-        String sqlCheck = String.format("""
-                select Count(readerId) from readers where readerId = '%s';
-                """, reader.getReaderId());
-
+        String sqlCheck = String.format("SELECT COUNT(readerId) FROM readers WHERE readerId = '%s';", reader.getReaderId());
         ResultSet rs = repo.executeQuery(sqlCheck);
 
+
+        boolean exists = false;
         try {
-            if (rs.next()) {
-                if (rs.getInt(1) > 0) {
-                    repo.executeUpdate(sqlUpdate);
-                } else {
-                    repo.executeUpdate(sqlInsert);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            exists = rs.next() && rs.getInt(1) > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (!exists) {
+            String sqlInsert = String.format("""
+                            INSERT INTO readers (readerId, readerName, readerEmail, readerPhoneNumber, readerDob, address)
+                            VALUES ('%s', '%s', '%s', '%s', '%s', '%s');
+                            """, reader.getReaderId(),
+                    reader.getReaderName(),
+                    reader.getReaderEmail(),
+                    reader.getReaderPhone(),
+                    reader.getReaderDOB(),
+                    reader.getReaderAddress()
+            );
+
+            repo.executeUpdate(sqlInsert);
+        } else {
+            String sqlUpdate = String.format("""
+                            UPDATE readers
+                            SET readerName = '%s',
+                                readerEmail = '%s',
+                                readerPhoneNumber = '%s',
+                                readerDOB = '%s',
+                                address = '%s'
+                            WHERE readerId = '%s';
+                            """, reader.getReaderName(),
+                    reader.getReaderEmail(),
+                    reader.getReaderPhone(),
+                    reader.getReaderDOB(),
+                    reader.getReaderAddress(),
+                    reader.getReaderId()
+            );
+
+            repo.executeUpdate(sqlUpdate);
         }
     }
+
 
     @Override
     public void delete(Reader reader) {
         String sql = String.format("""
-                update readers set isDelete = true where readerId = '%s';
+                delete from readers where readerId = '%s';
                 """, reader.getReaderId());
 
         repo.executeUpdate(sql);
@@ -179,7 +191,7 @@ public class ReaderRepositoryImpl implements IReaderRepository {
     }
 
     @Override
-    public Optional<Reader> getReaderById(String id){
+    public Optional<Reader> getReaderById(String id) {
         String sql = String.format("""
                 select * from readers where readerId = '%s' and isDelete = false;
                 """, id);
@@ -187,7 +199,7 @@ public class ReaderRepositoryImpl implements IReaderRepository {
         ResultSet rs = repo.executeQuery(sql);
 
         try {
-            if(rs.next()){
+            if (rs.next()) {
                 return Optional.ofNullable(Reader.builder()
                         .readerId(rs.getString("readerId"))
                         .readerName(rs.getString("readerName"))
@@ -202,6 +214,77 @@ public class ReaderRepositoryImpl implements IReaderRepository {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public boolean isExistReaderPhoneNumber(String readerPhoneNumber) {
+        String sql = String.format("""
+                select count(*) from readers where readerPhoneNumber = '%s' and isDelete = false;
+                """, readerPhoneNumber);
+
+        ResultSet rs = repo.executeQuery(sql);
+
+        if (rs != null) {
+            try {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isExistReaderEmail(String readerEmail) {
+        String sql = String.format("""
+                select count(*) from readers where readerEmail = '%s' and isDelete = false;
+                """, readerEmail);
+
+        ResultSet rs = repo.executeQuery(sql);
+
+        if (rs != null) {
+            try {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Reader getReaderByUsername(String username) {
+        String sql = String.format("""
+                select r.*
+                from readers r
+                         join library.users u on u.userId = r.userId
+                                
+                where u.username = '%s';
+                                
+                """, username);
+
+        ResultSet rs = repo.executeQuery(sql);
+
+        try {
+            if (rs.next()) {
+                return Reader.builder()
+                        .readerId(rs.getString("readerId"))
+                        .readerName(rs.getString("readerName"))
+                        .readerEmail(rs.getString("readerEmail"))
+                        .readerPhone(rs.getString("readerPhoneNumber"))
+                        .readerDOB(rs.getDate("readerDOB").toLocalDate())
+                        .readerAddress(rs.getString("address"))
+                        .build();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
     }
 }
 

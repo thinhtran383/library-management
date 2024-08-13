@@ -9,6 +9,7 @@ module com.example.library {
     opens com.example.library to javafx.fxml;
     opens com.example.library.controllers to javafx.fxml;
     opens com.example.library.models to javafx.fxml;
+    opens com.example.library.controllers.client to javafx.fxml;
 
     exports com.example.library;
     exports com.example.library.controllers;
@@ -16,4 +17,5 @@ module com.example.library {
     exports com.example.library.services;
     exports com.example.library.utils;
     exports com.example.library.repositories;
+    exports com.example.library.controllers.client;
 }

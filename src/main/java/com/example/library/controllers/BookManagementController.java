@@ -6,6 +6,7 @@ import com.example.library.models.Book;
 import com.example.library.services.BookServiceImpl;
 import com.example.library.services.IBookService;
 import com.example.library.utils.AlertUtil;
+import com.example.library.utils.UserContext;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,13 +15,28 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static com.example.library.common.Regex.isValid;
+
 public class BookManagementController implements Initializable {
+    @FXML
+    private Text lbCategory;
+    @FXML
+    private Text lbQuantity;
+    @FXML
+    private Text lbPublishDate;
+    @FXML
+    private Text lbBookId;
+    @FXML
+    private Text lbBookName;
+    @FXML
+    private Text lbAuthor;
     @FXML
     private TextField txtAuthor;
     @FXML
@@ -84,13 +100,46 @@ public class BookManagementController implements Initializable {
         initComboBox();
         customDatePicker();
 
-        btnAdd.setVisible(true);
-
-        btnDelete.setVisible(false);
-        btnUpdate.setVisible(false);
+//        btnAdd.setVisible(true);
+//
+//        btnDelete.setVisible(false);
+//        btnUpdate.setVisible(false);
 
         txtBookId.setText(bookService.getBookId());
+
+        if (UserContext.getInstance().getRole().equalsIgnoreCase("reader")) {
+            setupForReader();
+        }
     }
+
+
+    private void setupForReader() {
+        btnAdd.setVisible(false);
+        btnDelete.setVisible(false);
+        btnUpdate.setVisible(false);
+        txtAuthor.setVisible(false);
+        txtCategory.setVisible(false);
+        txtBookId.setVisible(false);
+        txtBookName.setVisible(false);
+        txtQuantity.setVisible(false);
+        dpPublish.setVisible(false);
+        cbAuthor.setVisible(false);
+        cbCategory.setVisible(false);
+        btnAddCategory.setVisible(false);
+        btnAddAuthor.setVisible(false);
+
+        lbBookId.setVisible(false);
+        lbBookName.setVisible(false);
+        lbCategory.setVisible(false);
+        lbQuantity.setVisible(false);
+        lbPublishDate.setVisible(false);
+        lbAuthor.setVisible(false);
+
+        tbBooks.setMinSize(847,578);
+
+    }
+
+
 
     private void customDatePicker() {
         dpPublish.setDayCellFactory(picker -> new DateCell() {
@@ -129,10 +178,10 @@ public class BookManagementController implements Initializable {
             dpPublish.setValue(book.getPublisher());
             cbAuthor.setValue(book.getAuthor());
 
-            btnAdd.setVisible(false);
-
-            btnDelete.setVisible(true);
-            btnUpdate.setVisible(true);
+//            btnAdd.setVisible(false);
+//
+//            btnDelete.setVisible(true);
+//            btnUpdate.setVisible(true);
 
 
         });
@@ -146,17 +195,15 @@ public class BookManagementController implements Initializable {
         String quantity = txtQuantity.getText();
         LocalDate publishDate = dpPublish.getValue();
         String author = txtAuthor.getText().isBlank() ? cbAuthor.getValue() : txtAuthor.getText();
-
-        // validate
-        if(!isValid(Regex.INTEGER_NUMBER, quantity)){
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Số lượng sách phải là số nguyên");
+        // check null
+        if (isNull()) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Please fill all fields!");
             return;
         }
 
-
-        // check null
-        if (isNull()) {
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Hãy điền đầy đủ thông tin sách!");
+        // validate
+        if (!isValid("INTEGER_NUMBER", quantity)) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Quantity must be an integer!");
             return;
         }
 
@@ -181,11 +228,10 @@ public class BookManagementController implements Initializable {
     public void onClickDelete(ActionEvent actionEvent) {
         Optional<Book> selectedBook = Optional.ofNullable(tbBooks.getSelectionModel().getSelectedItem());
 
-        if(selectedBook.isPresent() && AlertUtil.showConfirmation("Bạn có chắc chắn muốn xóa không?")){
+        if (selectedBook.isPresent() && AlertUtil.showConfirmation("Are you sure you want to delete?\nThis action cannot be undone!")) {
             bookService.deleteBook(selectedBook.get());
-        }
-        else if(selectedBook.isEmpty()){
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Hãy chọn sách cần xóa!");
+        } else if (selectedBook.isEmpty()) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Please select a book to delete!");
         }
         tbBooks.setItems(bookService.getAllBook());
     }
@@ -201,18 +247,18 @@ public class BookManagementController implements Initializable {
         String author = cbAuthor.getValue();
 
         //check null
-        if(isNull(bookId, bookName, category, quantity, publishDate, author)){
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Hãy điền đầy đủ thông tin sách!");
+        if (isNull(bookId, bookName, category, quantity, publishDate, author)) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Please fill all fields!");
             return;
         }
 
         //validate
-        if(!isValid(Regex.INTEGER_NUMBER, quantity)){
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Số lượng sách phải là số nguyên");
+        if (!isValid("INTEGER_NUMBER", quantity)) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Quantity must be an integer!");
             return;
         }
 
-        if(selectedBook.isPresent()){
+        if (selectedBook.isPresent()) {
             selectedBook.get().setBookName(bookName);
             selectedBook.get().setCategory(category);
             selectedBook.get().setQuantity(Integer.parseInt(quantity));
@@ -220,29 +266,32 @@ public class BookManagementController implements Initializable {
             selectedBook.get().setAuthor(author);
             bookService.updateBook(selectedBook.get());
             tbBooks.setItems(bookService.getAllBook());
-            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Success", null, "Cập nhật sách thành công!");
+            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Success", null, "Update book successfully!");
         } else {
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Hãy chọn sách cần cập nhật!");
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Please select a book to update!");
         }
 
     }
 
     public void onClickRefresh(ActionEvent actionEvent) {
         clear();
+        tbBooks.setItems(bookService.getAllBook());
+
     }
+
     public void onClickAddCategory(ActionEvent actionEvent) {
         if (isAddingCategory) {
             txtCategory.setVisible(false);
             cbCategory.setVisible(true);
             txtCategory.clear();
-            btnAddCategory.setText("Thêm mới");
+            btnAddCategory.setText("Add Category");
             cbCategory.getItems().clear();
             cbCategory.getItems().addAll(bookService.getAllCategoryName());
         } else {
             txtCategory.setVisible(true);
             cbCategory.setVisible(false);
             cbCategory.getSelectionModel().clearSelection();
-            btnAddCategory.setText("Hủy");
+            btnAddCategory.setText("Cancel");
         }
         isAddingCategory = !isAddingCategory;
 
@@ -250,18 +299,18 @@ public class BookManagementController implements Initializable {
     }
 
     public void onClickAddAuthor(ActionEvent actionEvent) {
-        if(isAddingAuthor){
+        if (isAddingAuthor) {
             txtAuthor.setVisible(false);
             cbAuthor.setVisible(true);
             txtAuthor.clear();
-            btnAddAuthor.setText("Thêm mới");
+            btnAddAuthor.setText("Add Author");
             cbAuthor.getItems().clear();
             cbAuthor.getItems().addAll();
         } else {
             txtAuthor.setVisible(true);
             cbAuthor.setVisible(false);
             cbAuthor.getSelectionModel().clearSelection();
-            btnAddAuthor.setText("Hủy");
+            btnAddAuthor.setText("Cancel");
         }
         isAddingAuthor = !isAddingAuthor;
     }
@@ -276,7 +325,7 @@ public class BookManagementController implements Initializable {
         return false;
     }
 
-    private void clear(){
+    private void clear() {
         txtBookId.setText(bookService.getBookId());
         txtBookName.clear();
         txtCategory.clear();
@@ -285,21 +334,17 @@ public class BookManagementController implements Initializable {
         cbAuthor.setValue(null);
         tbBooks.getSelectionModel().clearSelection();
 
-        btnAdd.setVisible(true);
+//        btnAdd.setVisible(true);
+//
+//        btnDelete.setVisible(false);
+//        btnUpdate.setVisible(false);
 
-        btnDelete.setVisible(false);
-        btnUpdate.setVisible(false);
-
-    }
-
-    private boolean isValid(String regex, String input) {
-        return input.matches(regex);
     }
 
 
     public void onSearch(KeyEvent keyEvent) {
         String keyword = txtSearch.getText();
-        if(keyword.isEmpty()){
+        if (keyword.isEmpty()) {
             tbBooks.setItems(bookService.getAllBook());
         } else {
             tbBooks.setItems(bookService.getAllBook().filtered(book -> {

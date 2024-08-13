@@ -20,6 +20,8 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static com.example.library.common.Regex.isValid;
+
 public class ReaderManagementController implements Initializable {
     @FXML
     private TextField txtSearch;
@@ -117,12 +119,12 @@ public class ReaderManagementController implements Initializable {
             return;
         }
 
-        if (!isValid(Regex.EMAIL, email)) {
+        if (!isValid("EMAIL", email)) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Email không hợp lệ!");
             return;
         }
 
-        if (!isValid(Regex.PHONE_NUMBER, phoneNumber)) {
+        if (!isValid("PHONE_NUMBER", phoneNumber)) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Số điện thoại không hợp lệ!");
             return;
         }
@@ -135,8 +137,13 @@ public class ReaderManagementController implements Initializable {
                 .readerDOB(dpDob.getValue())
                 .readerAddress(address)
                 .build();
-        readerService.saveReader(reader);
-
+        try {
+            readerService.saveReader(reader);
+            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Thông báo", null, "Thêm độc giả thành công!");
+        } catch (Exception e) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, e.getMessage());
+            return;
+        }
         tbReaders.setItems(readerService.getAllReaders());
 
 
@@ -170,12 +177,12 @@ public class ReaderManagementController implements Initializable {
             return;
         }
 
-        if (!isValid(Regex.EMAIL, email)) {
+        if (!isValid("EMAIL", email)) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Email không hợp lệ!");
             return;
         }
 
-        if (!isValid(Regex.PHONE_NUMBER, phoneNumber)) {
+        if (!isValid("PHONE_NUMBER", phoneNumber)) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Số điện thoại không hợp lệ!");
             return;
         }
@@ -189,9 +196,14 @@ public class ReaderManagementController implements Initializable {
                 .readerAddress(address)
                 .build();
 
-        readerService.saveReader(reader);
+        try {
+            readerService.updateReader(reader);
+            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Thông báo", null, "Cập nhật độc giả thành công!");
+        } catch (Exception e) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, e.getMessage());
+            return;
+        }
         tbReaders.setItems(readerService.getAllReaders());
-        AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Thông báo", null, "Cập nhật độc giả thành công!");
     }
 
     public void onClickRefresh(ActionEvent actionEvent) {
@@ -218,9 +230,6 @@ public class ReaderManagementController implements Initializable {
         return false;
     }
 
-    private boolean isValid(String regex, String input) {
-        return input.matches(regex);
-    }
 
     private void customDatePicker() {
         dpDob.setDayCellFactory(param -> new DateCell() {

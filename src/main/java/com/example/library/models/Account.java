@@ -7,8 +7,10 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Account {
     private String username;
     private String password;
+    private String role;
 
 }

@@ -8,6 +8,8 @@ import com.example.library.repositories.IAuthorRepository;
 import com.example.library.repositories.IBookRepository;
 import javafx.collections.ObservableList;
 
+import java.util.UUID;
+
 public class BookServiceImpl implements IBookService {
 
     private final IBookRepository bookRepository;
@@ -65,7 +67,7 @@ public class BookServiceImpl implements IBookService {
 
     @Override
     public String getBookId() {
-        return bookRepository.getBookId();
+        return "B" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
     }
 
     @Override
@@ -83,7 +85,7 @@ public class BookServiceImpl implements IBookService {
             categoryId = bookRepository.getCategoryIdByName(book.getCategory());
         }
 
-        if(authorId == null){
+        if (authorId == null) {
             bookRepository.saveAuthor(book.getAuthor());
             authorId = authorRepository.getAuthorIdByName(book.getAuthor());
         }

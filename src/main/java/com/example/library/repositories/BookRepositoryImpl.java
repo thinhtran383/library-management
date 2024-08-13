@@ -55,7 +55,7 @@ public class BookRepositoryImpl implements IBookRepository {
 
     @Override
     public void delete(Book book) {
-        String sql = String.format("update books set isDelete = true where bookId = '%s'", book.getBookId());
+        String sql = String.format("delete from books where bookId = '%s'", book.getBookId());
         repo.executeUpdate(sql);
     }
 

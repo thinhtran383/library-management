@@ -3,9 +3,12 @@ package com.example.library.controllers;
 import com.example.library.models.Borrow;
 import com.example.library.services.BorrowServiceImpl;
 import com.example.library.services.IBorrowService;
+import com.example.library.utils.UserContext;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -17,11 +20,13 @@ import java.util.ResourceBundle;
 
 public class BorrowHistoryController implements Initializable {
     @FXML
+    private Button btnReturn;
+    @FXML
     private TableColumn colDueDate;
     @FXML
     private TableView<Borrow> tbBorrows;
     @FXML
-    private TableColumn colBorrowId;
+    private TableColumn<Borrow, Integer> colBorrowId;
     @FXML
     private TableColumn colBookName;
     @FXML
@@ -40,10 +45,13 @@ public class BorrowHistoryController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadBorrows();
+        initForReader();
+        System.out.println(readerId);
     }
 
     private void loadBorrows() {
-        colBorrowId.setCellValueFactory(new PropertyValueFactory<>("borrowId"));
+        colBorrowId.setCellValueFactory(cellData -> new SimpleIntegerProperty(tbBorrows.getItems().indexOf(cellData.getValue()) + 1).asObject());
+//        colBorrowId.setCellValueFactory(new PropertyValueFactory<>("borrowId"));
         colBookName.setCellValueFactory(new PropertyValueFactory<>("bookName"));
         colBorrowDate.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
         colReturnDate.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
@@ -51,6 +59,14 @@ public class BorrowHistoryController implements Initializable {
 
         tbBorrows.setItems(borrowService.getBorrowByReaderId(readerId));
 
+    }
+
+    private void initForReader(){
+        if(UserContext.getInstance().getRole().equalsIgnoreCase("reader")){
+            btnReturn.setVisible(false);
+
+            tbBorrows.setMinSize(847,578);
+        }
     }
 
     public void onClickReturn(ActionEvent actionEvent) {
