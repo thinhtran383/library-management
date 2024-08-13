@@ -16,4 +16,6 @@ public interface IAccountRepository {
 
     Map<String, String> getAccountInfoByEmail(String email);
 
+    int getUserIdByUsername(String username);
+
 }

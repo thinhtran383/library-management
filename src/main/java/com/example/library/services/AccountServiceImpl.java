@@ -58,6 +58,8 @@ public class AccountServiceImpl implements IAccountService {
 
         accountRepository.save(account);
 
+        int userId = accountRepository.getUserIdByUsername(account.getUsername());
+        reader.setUserId(userId);
         try {
             readerRepository.save(reader);
         } catch (Exception e) {

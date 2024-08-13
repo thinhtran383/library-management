@@ -110,10 +110,7 @@ public class AccountRepositoryImpl implements IAccountRepository {
         return null;
     }
 
-    public static void main(String[] args) {
-        AccountRepositoryImpl accountRepository = new AccountRepositoryImpl();
-        System.out.println(accountRepository.getAccountInfoByEmail("123@gmail.com"));
-    }
+
 
     public Reader getInformation(String username) {
         String sql = String.format("""
@@ -140,6 +137,26 @@ public class AccountRepositoryImpl implements IAccountRepository {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    @Override
+    public int getUserIdByUsername(String username){
+        String sql = String.format("""
+                select userId from users where username = '%s'
+                """, username);
+
+        ResultSet rs = dbConnect.executeQuery(sql);
+
+        try {
+            if(rs.next()){
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return 0;
+
     }
 
 

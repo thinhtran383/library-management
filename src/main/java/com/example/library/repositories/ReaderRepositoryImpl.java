@@ -59,14 +59,15 @@ public class ReaderRepositoryImpl implements IReaderRepository {
 
         if (!exists) {
             String sqlInsert = String.format("""
-                            INSERT INTO readers (readerId, readerName, readerEmail, readerPhoneNumber, readerDob, address)
-                            VALUES ('%s', '%s', '%s', '%s', '%s', '%s');
+                            INSERT INTO readers (readerId, readerName, readerEmail, readerPhoneNumber, readerDob, address, userId)
+                            VALUES ('%s', '%s', '%s', '%s', '%s', '%s', %d);
                             """, reader.getReaderId(),
                     reader.getReaderName(),
                     reader.getReaderEmail(),
                     reader.getReaderPhone(),
                     reader.getReaderDOB(),
-                    reader.getReaderAddress()
+                    reader.getReaderAddress(),
+                    reader.getUserId()
             );
 
             dbConnect.executeUpdate(sqlInsert);
