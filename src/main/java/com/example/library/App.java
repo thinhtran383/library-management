@@ -21,6 +21,7 @@ public class App extends Application {
 
         primaryStage.setScene(scene);
 
+        centerStage(primaryStage);
 
         primaryStage.show();
     }
@@ -29,12 +30,10 @@ public class App extends Application {
         Parent root = loadFXML(fxml);
         scene.setRoot(root);
 
-
-        System.out.println(root.prefHeight(-1) + " " + root.prefWidth(-1));
         stage.setWidth(root.prefWidth(-1));
         stage.setHeight(root.prefHeight(-1));
 
-
+        centerStage(stage);
     }
 
     public static void setRootPop(String fxml, String title, boolean resizable) throws IOException {
@@ -44,6 +43,7 @@ public class App extends Application {
         stage.setScene(newScene);
         stage.setTitle(title);
 
+        centerStage(stage);
 
         stage.showAndWait();
     }

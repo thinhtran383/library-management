@@ -195,8 +195,8 @@ public class ReaderManagementController implements Initializable {
             return;
         }
 
+
         Reader reader = Reader.builder()
-                .readerId(readerId)
                 .readerName(readerName)
                 .readerEmail(email)
                 .readerPhone(phoneNumber)
@@ -204,7 +204,9 @@ public class ReaderManagementController implements Initializable {
                 .readerAddress(address)
                 .isBlocked(isBlocked)
                 .username(txtUsername.getText())
+                .readerId(readerId)
                 .build();
+
 
         try {
             readerService.updateReader(reader);

@@ -19,4 +19,5 @@ public class Reader {
     private String readerAddress;
     private boolean isBlocked;
     private String username;
+
 }
