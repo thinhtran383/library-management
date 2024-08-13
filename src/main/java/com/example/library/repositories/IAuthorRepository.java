@@ -5,6 +5,5 @@ import javafx.collections.ObservableList;
 
 public interface IAuthorRepository {
     ObservableList<Author> getAllAuthor();
-
     String getAuthorIdByName(String author);
 }

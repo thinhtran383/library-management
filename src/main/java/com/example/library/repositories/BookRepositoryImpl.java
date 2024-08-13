@@ -1,7 +1,7 @@
 package com.example.library.repositories;
 
 import com.example.library.models.Book;
-import com.example.library.utils.Repo;
+import com.example.library.utils.DbConnect;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class BookRepositoryImpl implements IBookRepository {
-    private final Repo repo = Repo.getInstance();
+    private final DbConnect dbConnect = DbConnect.getInstance();
 
     @Override
     public void save(Book book) {
@@ -41,12 +41,12 @@ public class BookRepositoryImpl implements IBookRepository {
                 select * from books where bookId = '%s';
                 """, book.getBookId());
 
-        ResultSet rs = repo.executeQuery(sqlCheck);
+        ResultSet rs = dbConnect.executeQuery(sqlCheck);
         try {
             if (rs.next()) {
-                repo.executeUpdate(sqlUpdate);
+                dbConnect.executeUpdate(sqlUpdate);
             } else {
-                repo.executeUpdate(sql);
+                dbConnect.executeUpdate(sql);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -56,7 +56,7 @@ public class BookRepositoryImpl implements IBookRepository {
     @Override
     public void delete(Book book) {
         String sql = String.format("delete from books where bookId = '%s'", book.getBookId());
-        repo.executeUpdate(sql);
+        dbConnect.executeUpdate(sql);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BookRepositoryImpl implements IBookRepository {
         String sqlCheck = String.format("""
                 select * from categories where categoryName = '%s';
                 """, category);
-        ResultSet rs = repo.executeQuery(sqlCheck);
+        ResultSet rs = dbConnect.executeQuery(sqlCheck);
         try {
             if (rs.next()) {
                 return;
@@ -75,7 +75,7 @@ public class BookRepositoryImpl implements IBookRepository {
         String sql = String.format("""
                 insert into categories(categoryName) values ('%s');
                 """, category);
-        repo.executeUpdate(sql);
+        dbConnect.executeUpdate(sql);
     }
     @Override
 
@@ -83,7 +83,7 @@ public class BookRepositoryImpl implements IBookRepository {
         String sqlCheck = String.format("""
                 select * from authors where authorName = '%s';
                 """, author);
-        ResultSet rs = repo.executeQuery(sqlCheck);
+        ResultSet rs = dbConnect.executeQuery(sqlCheck);
         try {
             if (rs.next()) {
                 return;
@@ -94,7 +94,7 @@ public class BookRepositoryImpl implements IBookRepository {
         String sql = String.format("""
                 insert into authors(authorName) values ('%s');
                 """, author);
-        repo.executeUpdate(sql);
+        dbConnect.executeUpdate(sql);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class BookRepositoryImpl implements IBookRepository {
                 """, categoryName);
 
         System.out.println(sql);
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
         try {
             if (rs.next()) {
                 return rs.getString("categoryId");
@@ -125,7 +125,7 @@ public class BookRepositoryImpl implements IBookRepository {
                 where b.isDelete = false and a.isDelete = false;
                 """;
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
         try {
             while (rs.next()) {
                 String bookId = rs.getString("bookId");
@@ -159,7 +159,7 @@ public class BookRepositoryImpl implements IBookRepository {
         String sql = """
                 select categoryName from categories;
                 """;
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
 
         try {
             while (rs.next()) {
@@ -179,7 +179,7 @@ public class BookRepositoryImpl implements IBookRepository {
                 select bookId from books where bookName = '%s';
                 """, bookName);
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
 
         try {
             if (rs.next()) {
@@ -197,7 +197,7 @@ public class BookRepositoryImpl implements IBookRepository {
         String sql = String.format("""
                 update books set quantity = quantity + 1 where bookId = '%s';
                 """, bookId);
-        repo.executeUpdate(sql);
+        dbConnect.executeUpdate(sql);
     }
 
     @Override
@@ -205,7 +205,7 @@ public class BookRepositoryImpl implements IBookRepository {
         String sql = String.format("""
                 update books set quantity = quantity - 1 where bookId = '%s';
                 """, bookId);
-        repo.executeUpdate(sql);
+        dbConnect.executeUpdate(sql);
     }
 
     @Override
@@ -216,7 +216,7 @@ public class BookRepositoryImpl implements IBookRepository {
                 select bookId from books where isDelete = false;
                 """;
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
 
         try {
             while (rs.next()) {
@@ -236,7 +236,7 @@ public class BookRepositoryImpl implements IBookRepository {
                 select bookName from books where bookId = '%s' and isDelete = false;
                 """, bookId);
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
         try {
             if (rs.next()) {
                 return rs.getString("bookName");
@@ -253,7 +253,7 @@ public class BookRepositoryImpl implements IBookRepository {
                 select SUM(QUANTITY) as total from books where isDelete = false;
                 """;
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
         try {
             if (rs.next()) {
                 return rs.getInt("total");
@@ -268,7 +268,7 @@ public class BookRepositoryImpl implements IBookRepository {
     public String getBookId() {
         String sql = "select count(*) from books";
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
         int id = getTotalBook() + 1;
         try{
             if(rs.next()){
@@ -291,7 +291,7 @@ public class BookRepositoryImpl implements IBookRepository {
                         """, bookId
         );
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
         try {
             if (rs.next()) {
                 return rs.getInt("quantity");

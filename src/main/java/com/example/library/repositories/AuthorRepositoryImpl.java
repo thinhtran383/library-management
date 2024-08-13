@@ -1,14 +1,14 @@
 package com.example.library.repositories;
 
 import com.example.library.models.Author;
-import com.example.library.utils.Repo;
+import com.example.library.utils.DbConnect;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
 
 public class AuthorRepositoryImpl implements IAuthorRepository {
-    Repo repo = Repo.getInstance();
+    DbConnect dbConnect = DbConnect.getInstance();
 
     @Override
     public ObservableList<Author> getAllAuthor() {
@@ -17,7 +17,7 @@ public class AuthorRepositoryImpl implements IAuthorRepository {
         String sql = """
                     SELECT * FROM authors
                 """;
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
 
         try {
             while (rs.next()) {
@@ -38,7 +38,7 @@ public class AuthorRepositoryImpl implements IAuthorRepository {
         String sql = String.format("""
                     SELECT authorId FROM authors WHERE authorName = '%s'
                 """, author);
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
         try {
             if (rs.next()) {
                 return rs.getString("authorId");

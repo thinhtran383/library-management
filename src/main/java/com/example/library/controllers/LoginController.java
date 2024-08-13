@@ -21,7 +21,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class LoginController implements Initializable{
+public class LoginController implements Initializable {
 
 
     @FXML
@@ -32,6 +32,7 @@ public class LoginController implements Initializable{
     private PasswordField pwMatKhau;
 
     private final IAccountService accountService;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         cbRole.getItems().addAll("Librarian", "Reader");
@@ -58,12 +59,20 @@ public class LoginController implements Initializable{
                 .role(role)
                 .build();
         if (accountService.checkAccount(account)) {
+
+            if (accountService.isBlocked(username)) {
+                AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Your account is blocked, please contact admin for more information!");
+                return;
+            }
+
             AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Information", null, "Login successfully!");
 
             UserContext.getInstance().setRole(role);
             UserContext.getInstance().setUsername(username);
 
             App.setRoot("DashboardFrm");
+
+
         } else {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Username or password wrong!");
         }
@@ -74,4 +83,7 @@ public class LoginController implements Initializable{
     }
 
 
+    public void onClickResetPassword(ActionEvent actionEvent) throws IOException {
+        App.setRootPop("EmailFrm", "Reset password", false);
+    }
 }

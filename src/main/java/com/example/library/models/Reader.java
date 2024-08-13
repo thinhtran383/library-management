@@ -17,4 +17,6 @@ public class Reader {
     private String readerPhone;
     private LocalDate readerDOB;
     private String readerAddress;
+    private boolean isBlocked;
+    private String username;
 }

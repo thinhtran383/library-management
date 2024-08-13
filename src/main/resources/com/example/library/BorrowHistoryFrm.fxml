@@ -20,7 +20,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-          <TableColumn fx:id="colBookName" prefWidth="102.0" text="Tên sách">
+          <TableColumn fx:id="colBookName" prefWidth="196.0" text="Tên sách">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -29,7 +29,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colBorrowDate" prefWidth="169.0" text="Ngày mượn">
+            <TableColumn fx:id="colBorrowDate" prefWidth="194.22222900390625" text="Ngày mượn">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -38,7 +38,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colReturnDate" prefWidth="225.5" text="Ngày hẹn trả">
+            <TableColumn fx:id="colReturnDate" prefWidth="167.11111450195312" text="Ngày hẹn trả">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -47,7 +47,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colDueDate" prefWidth="203.5" text="Ngày trả">
+            <TableColumn fx:id="colDueDate" prefWidth="144.0" text="Ngày trả">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -58,6 +58,6 @@
             </TableColumn>
         </columns>
       </TableView>
-      <Button fx:id="btnReturn" layoutX="297.0" layoutY="317.0" mnemonicParsing="false" onAction="#onClickReturn" text="Trả sách" />
+      <Button fx:id="btnReturn" layoutX="351.0" layoutY="321.0" mnemonicParsing="false" onAction="#onClickReturn" text="Trả sách" />
    </children>
 </AnchorPane>

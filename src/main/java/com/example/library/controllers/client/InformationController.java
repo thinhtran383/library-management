@@ -1,6 +1,8 @@
 package com.example.library.controllers.client;
 
 import com.example.library.models.Reader;
+import com.example.library.services.BorrowServiceImpl;
+import com.example.library.services.IBorrowService;
 import com.example.library.services.IReaderService;
 import com.example.library.services.ReaderServiceImpl;
 import com.example.library.utils.AlertUtil;
@@ -33,6 +35,8 @@ public class InformationController implements Initializable {
         disableEdit();
         Reader reader = readerService.getReaderByUsername(UserContext.getInstance().getUsername());
         initInformation(reader);
+
+
     }
 
     private void disableEdit() {
@@ -80,6 +84,7 @@ public class InformationController implements Initializable {
                 .readerAddress(txtAddress.getText())
                 .readerPhone(txtPhoneNumber.getText())
                 .readerDOB(dpDob.getValue())
+                .username(UserContext.getInstance().getUsername())
                 .build();
 
 

@@ -1,9 +1,15 @@
 package com.example.library.controllers;
 
+import com.example.library.App;
+import com.example.library.services.BorrowServiceImpl;
+import com.example.library.services.IBorrowService;
+import com.example.library.utils.AlertUtil;
 import com.example.library.utils.UserContext;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -18,12 +24,23 @@ public class DashboardController implements Initializable {
     @FXML
     private AnchorPane pane;
 
+    private final IBorrowService borrowService;
+
+    public DashboardController(){
+        this.borrowService = new BorrowServiceImpl();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 //        lstMenu.getItems().addAll("Quản lý sách", "Quản lý độc giả", "Quản lý mượn trả", "Thống kê");
 //        lstMenu.getSelectionModel().selectFirst();
 //        loadPane(lstMenu.getSelectionModel().getSelectedItem());
         initMenuByRole(UserContext.getInstance().getRole());
+
+        if (borrowService.isReaderLate(UserContext.getInstance().getReaderId())) {
+            AlertUtil.showAlert(Alert.AlertType.WARNING, "Warning", null, "You have late book, please return it as soon as possible");
+        }
+
     }
 
     public void initMenuByRole(String role){
@@ -85,5 +102,15 @@ public class DashboardController implements Initializable {
         } catch (IOException e){
             e.printStackTrace();
         }
+
+
+    }
+
+    public void onClickLogout(ActionEvent actionEvent) throws IOException {
+        App.setRoot("LoginFrm");
+    }
+
+    public void onClickChangePassword(ActionEvent actionEvent) throws IOException {
+        App.setRootPop("ChangePassFrm","Change password", false);
     }
 }

@@ -4,6 +4,7 @@ module com.example.library {
     requires java.compiler;
     requires java.sql;
     requires static lombok;
+    requires java.mail;
 
 
     opens com.example.library to javafx.fxml;

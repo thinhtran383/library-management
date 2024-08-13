@@ -23,6 +23,9 @@ import java.util.ResourceBundle;
 import static com.example.library.common.Regex.isValid;
 
 public class ReaderManagementController implements Initializable {
+    public TextField txtUsername;
+    public CheckBox isBlock;
+    public TableColumn colUsername;
     @FXML
     private TextField txtSearch;
     @FXML
@@ -73,19 +76,20 @@ public class ReaderManagementController implements Initializable {
         customDatePicker();
         txtReaderId.setText(readerService.getReaderId());
 
-        btnAdd.setVisible(true);
-        btnDelete.setVisible(false);
-        btnUpdate.setVisible(false);
+//        btnAdd.setVisible(true);
+//        btnDelete.setVisible(false);
+//        btnUpdate.setVisible(false);
     }
 
     public void loadReaders() {
+
         colReaderId.setCellValueFactory(new PropertyValueFactory<>("readerId"));
         colReaderName.setCellValueFactory(new PropertyValueFactory<>("readerName"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("readerEmail"));
         colPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("readerPhone"));
         colDob.setCellValueFactory(new PropertyValueFactory<>("readerDOB"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("readerAddress"));
-
+        colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
         tbReaders.setItems(readerService.getAllReaders());
     }
 
@@ -100,10 +104,12 @@ public class ReaderManagementController implements Initializable {
             txtPhoneNumber.setText(selectedReader.get().getReaderPhone());
             dpDob.setValue(selectedReader.get().getReaderDOB());
             txtAddress.setText(selectedReader.get().getReaderAddress());
+            txtUsername.setText(selectedReader.get().getUsername());
+            isBlock.setSelected(selectedReader.get().isBlocked());
 
-            btnAdd.setVisible(false);
-            btnDelete.setVisible(true);
-            btnUpdate.setVisible(true);
+//            btnAdd.setVisible(false);
+//            btnDelete.setVisible(true);
+//            btnUpdate.setVisible(true);
         }
     }
 
@@ -120,12 +126,12 @@ public class ReaderManagementController implements Initializable {
         }
 
         if (!isValid("EMAIL", email)) {
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Email không hợp lệ!");
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Invalid email!");
             return;
         }
 
         if (!isValid("PHONE_NUMBER", phoneNumber)) {
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Số điện thoại không hợp lệ!");
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Invalid phone number!");
             return;
         }
 
@@ -139,7 +145,7 @@ public class ReaderManagementController implements Initializable {
                 .build();
         try {
             readerService.saveReader(reader);
-            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Thông báo", null, "Thêm độc giả thành công!");
+            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Information", null, "Add reader successfully!");
         } catch (Exception e) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, e.getMessage());
             return;
@@ -152,7 +158,7 @@ public class ReaderManagementController implements Initializable {
     public void onClickDelete(ActionEvent actionEvent) {
         Optional<Reader> selectedReader = Optional.ofNullable(tbReaders.getSelectionModel().getSelectedItem());
 
-        if (selectedReader.isPresent() && AlertUtil.showConfirmation("Bạn có chắc chắn muốn xoá không?")) {
+        if (selectedReader.isPresent() && AlertUtil.showConfirmation("Are you sure you want to delete this reader?")) {
             readerService.deleteReader(selectedReader.get());
             tbReaders.setItems(readerService.getAllReaders());
         }
@@ -162,7 +168,7 @@ public class ReaderManagementController implements Initializable {
         Optional<Reader> selectedReader = Optional.ofNullable(tbReaders.getSelectionModel().getSelectedItem());
 
         if (selectedReader.isEmpty()) {
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Vui lòng chọn độc giả cần cập nhật!");
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Please select a reader to update");
             return;
         }
 
@@ -173,17 +179,19 @@ public class ReaderManagementController implements Initializable {
         String address = txtAddress.getText();
         String dob = dpDob.getValue().toString();
 
+        boolean isBlocked = isBlock.isSelected();
+
         if (isNull(readerId, readerName, email, phoneNumber, address, dob)) {
             return;
         }
 
         if (!isValid("EMAIL", email)) {
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Email không hợp lệ!");
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Invalid email!");
             return;
         }
 
         if (!isValid("PHONE_NUMBER", phoneNumber)) {
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Số điện thoại không hợp lệ!");
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Invalid phone number!");
             return;
         }
 
@@ -194,11 +202,13 @@ public class ReaderManagementController implements Initializable {
                 .readerPhone(phoneNumber)
                 .readerDOB(dpDob.getValue())
                 .readerAddress(address)
+                .isBlocked(isBlocked)
+                .username(txtUsername.getText())
                 .build();
 
         try {
             readerService.updateReader(reader);
-            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Thông báo", null, "Cập nhật độc giả thành công!");
+            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Information", null, "Update reader successfully!");
         } catch (Exception e) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, e.getMessage());
             return;
@@ -223,7 +233,7 @@ public class ReaderManagementController implements Initializable {
     private boolean isNull(Object... o) {
         for (Object obj : o) {
             if (obj == null || obj.toString().isEmpty()) {
-                AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Vui lòng điền đầy đủ thông tin!");
+                AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Please fill all fields!");
                 return true;
             }
         }
@@ -246,7 +256,6 @@ public class ReaderManagementController implements Initializable {
 
         if (keyword.isEmpty()) {
             tbReaders.setItems(readerService.getAllReaders());
-            return;
         } else {
             tbReaders.setItems(readerService.getAllReaders().filtered(reader -> {
 // search by name, id, email, phone number, address
@@ -266,7 +275,7 @@ public class ReaderManagementController implements Initializable {
         selectedReader.ifPresent(reader -> {
             BorrowHistoryController.setReaderId(reader.getReaderId());
             try {
-                App.setRootPop("BorrowHistoryFrm", "Lịch sử mượn sách", false);
+                App.setRootPop("BorrowHistoryFrm", "Borrow history", false);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

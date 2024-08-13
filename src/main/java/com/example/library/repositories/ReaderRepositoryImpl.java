@@ -1,7 +1,7 @@
 package com.example.library.repositories;
 
 import com.example.library.models.Reader;
-import com.example.library.utils.Repo;
+import com.example.library.utils.DbConnect;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,17 +10,19 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class ReaderRepositoryImpl implements IReaderRepository {
-    private final Repo repo = Repo.getInstance();
+    private final DbConnect dbConnect = DbConnect.getInstance();
 
     @Override
     public ObservableList<Reader> getAllReaders() {
         ObservableList<Reader> readers = FXCollections.observableArrayList();
 
         String sql = """
-                select * from readers where isDelete = false;
+                select r.*, u.username from readers r
+                join users u on r.userId = u.userId
+                where u.role = 'reader';
                 """;
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
         try {
             while (rs.next()) {
                 Reader reader = Reader.builder()
@@ -30,19 +32,22 @@ public class ReaderRepositoryImpl implements IReaderRepository {
                         .readerPhone(rs.getString("readerPhoneNumber"))
                         .readerDOB(rs.getDate("readerDOB").toLocalDate())
                         .readerAddress(rs.getString("address"))
+                        .isBlocked(rs.getBoolean("isBlock"))
+                        .username(rs.getString("username"))
                         .build();
                 readers.add(reader);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return readers;
     }
 
     @Override
     public void save(Reader reader) {
         String sqlCheck = String.format("SELECT COUNT(readerId) FROM readers WHERE readerId = '%s';", reader.getReaderId());
-        ResultSet rs = repo.executeQuery(sqlCheck);
+        ResultSet rs = dbConnect.executeQuery(sqlCheck);
 
 
         boolean exists = false;
@@ -64,7 +69,7 @@ public class ReaderRepositoryImpl implements IReaderRepository {
                     reader.getReaderAddress()
             );
 
-            repo.executeUpdate(sqlInsert);
+            dbConnect.executeUpdate(sqlInsert);
         } else {
             String sqlUpdate = String.format("""
                             UPDATE readers
@@ -72,17 +77,20 @@ public class ReaderRepositoryImpl implements IReaderRepository {
                                 readerEmail = '%s',
                                 readerPhoneNumber = '%s',
                                 readerDOB = '%s',
-                                address = '%s'
+                                address = '%s',
+                                isBlock = %d
                             WHERE readerId = '%s';
                             """, reader.getReaderName(),
                     reader.getReaderEmail(),
                     reader.getReaderPhone(),
                     reader.getReaderDOB(),
                     reader.getReaderAddress(),
+                    reader.isBlocked() ? 1 : 0,
                     reader.getReaderId()
+
             );
 
-            repo.executeUpdate(sqlUpdate);
+            dbConnect.executeUpdate(sqlUpdate);
         }
     }
 
@@ -93,7 +101,7 @@ public class ReaderRepositoryImpl implements IReaderRepository {
                 delete from readers where readerId = '%s';
                 """, reader.getReaderId());
 
-        repo.executeUpdate(sql);
+        dbConnect.executeUpdate(sql);
 
     }
 
@@ -101,10 +109,10 @@ public class ReaderRepositoryImpl implements IReaderRepository {
     public ObservableList<String> getAllReaderId() {
         ObservableList<String> result = FXCollections.observableArrayList();
         String sql = """
-                select readerId from readers where isDelete = false;
+                select readerId from readers;
                 """;
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
         try {
             while (rs.next()) {
                 result.add(rs.getString("readerId"));
@@ -119,10 +127,10 @@ public class ReaderRepositoryImpl implements IReaderRepository {
     @Override
     public String getReaderNameById(String readerId) {
         String sql = String.format("""
-                select readerName from readers where readerId = '%s' and isDelete = false;
+                select readerName from readers where readerId = '%s';
                 """, readerId);
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
         try {
             if (rs.next()) {
                 return rs.getString("readerName");
@@ -138,11 +146,11 @@ public class ReaderRepositoryImpl implements IReaderRepository {
     public String getReaderIdByName(String readerName) {
         String sql = String.format(
                 """
-                        select readerId from readers where readerName = '%s' and isDelete = false;
+                        select readerId from readers where readerName = '%s';
                          """, readerName
         );
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
 
         try {
             if (rs.next()) {
@@ -157,10 +165,10 @@ public class ReaderRepositoryImpl implements IReaderRepository {
     @Override
     public int getTotalReader() {
         String sql = """
-                select count(*) as total from readers where isDelete = false;
+                select count(*) as total from readers;
                 """;
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
         try {
             if (rs.next()) {
                 return rs.getInt("total");
@@ -177,7 +185,7 @@ public class ReaderRepositoryImpl implements IReaderRepository {
 
         int id = 0;
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
 
         try {
             if (rs.next()) {
@@ -193,10 +201,10 @@ public class ReaderRepositoryImpl implements IReaderRepository {
     @Override
     public Optional<Reader> getReaderById(String id) {
         String sql = String.format("""
-                select * from readers where readerId = '%s' and isDelete = false;
+                select * from readers where readerId = '%s';
                 """, id);
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
 
         try {
             if (rs.next()) {
@@ -219,10 +227,10 @@ public class ReaderRepositoryImpl implements IReaderRepository {
     @Override
     public boolean isExistReaderPhoneNumber(String readerPhoneNumber) {
         String sql = String.format("""
-                select count(*) from readers where readerPhoneNumber = '%s' and isDelete = false;
+                select count(*) from readers where readerPhoneNumber = '%s';
                 """, readerPhoneNumber);
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
 
         if (rs != null) {
             try {
@@ -239,10 +247,10 @@ public class ReaderRepositoryImpl implements IReaderRepository {
     @Override
     public boolean isExistReaderEmail(String readerEmail) {
         String sql = String.format("""
-                select count(*) from readers where readerEmail = '%s' and isDelete = false;
+                select count(*) from readers where readerEmail = '%s';
                 """, readerEmail);
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
 
         if (rs != null) {
             try {
@@ -267,7 +275,7 @@ public class ReaderRepositoryImpl implements IReaderRepository {
                                 
                 """, username);
 
-        ResultSet rs = repo.executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
 
         try {
             if (rs.next()) {
@@ -285,6 +293,40 @@ public class ReaderRepositoryImpl implements IReaderRepository {
         }
 
         return null;
+    }
+
+    public boolean existsByEmailAndNotId(String email, String id){
+        String sql = String.format("""
+                SELECT COUNT(*) FROM readers WHERE readerEmail = '%s' AND readerId <> '%s';
+                """, email, id);
+
+        ResultSet rs = dbConnect.executeQuery(sql);
+        try {
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
+    public boolean existsByPhoneAndNotId(String phone, String id){
+        String sql = String.format("""
+                SELECT COUNT(*) FROM readers WHERE readerPhoneNumber = '%s' AND readerId <> '%s';
+                """, phone, id);
+
+        ResultSet rs = dbConnect.executeQuery(sql);
+        try {
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+
     }
 }
 

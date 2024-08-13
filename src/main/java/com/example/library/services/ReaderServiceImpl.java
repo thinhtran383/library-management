@@ -7,6 +7,7 @@ import com.example.library.utils.AlertUtil;
 import javafx.collections.ObservableList;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class ReaderServiceImpl implements IReaderService {
     private final IReaderRepository readerRepository;
@@ -39,15 +40,20 @@ public class ReaderServiceImpl implements IReaderService {
 
     @Override
     public void updateReader(Reader reader) throws Exception {
-        boolean isPhoneNumberExisted = readerRepository.isExistReaderPhoneNumber(reader.getReaderPhone());
-        boolean isEmailExisted = readerRepository.isExistReaderEmail(reader.getReaderEmail());
+        Reader existReader = readerRepository.getReaderByUsername(reader.getUsername());
 
-        if (isPhoneNumberExisted || isEmailExisted) {
-            throw new IllegalArgumentException("Phone number or email already exists");
+        boolean isEmailExist = readerRepository.existsByEmailAndNotId(reader.getReaderEmail(), existReader.getReaderId());
+        boolean isPhoneExist = readerRepository.existsByPhoneAndNotId(reader.getReaderPhone(), existReader.getReaderId());
+
+        if (isEmailExist) {
+            throw new IllegalArgumentException("Email is already exist");
+        }
+
+        if (isPhoneExist) {
+            throw new IllegalArgumentException("Phone number is already exist");
         }
 
         readerRepository.save(reader);
-
     }
 
     @Override
@@ -57,7 +63,7 @@ public class ReaderServiceImpl implements IReaderService {
 
     @Override
     public String getReaderId() {
-        return readerRepository.getReaderId();
+        return "R" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
     }
 
     @Override

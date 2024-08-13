@@ -20,4 +20,7 @@ public interface IReaderRepository {
     boolean isExistReaderEmail(String readerEmail);
 
     Reader getReaderByUsername(String username);
+
+    boolean existsByEmailAndNotId(String email, String readerId);
+    boolean existsByPhoneAndNotId(String phone, String readerId);
 }

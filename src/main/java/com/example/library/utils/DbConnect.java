@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Repo { // singleton pattern
-    private static Repo instance;
+public class DbConnect { // singleton pattern
+    private static DbConnect instance;
 
     private final static String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/library";
     private final static String username = "root";
@@ -15,7 +15,7 @@ public class Repo { // singleton pattern
 
     private Connection connection;
 
-    private Repo() {
+    private DbConnect() {
         try {
             connection = DriverManager.getConnection(jdbcUrl, username, password);
         } catch (SQLException e) {
@@ -23,11 +23,11 @@ public class Repo { // singleton pattern
         }
     }
 
-    public static Repo getInstance() {
+    public static DbConnect getInstance() {
         if(instance == null) {
-            synchronized (Repo.class) {
+            synchronized (DbConnect.class) {
                 if (instance == null) {
-                    instance = new Repo();
+                    instance = new DbConnect();
                 }
             }
         }

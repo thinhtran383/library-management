@@ -6,21 +6,30 @@ import com.example.library.repositories.AccountRepositoryImpl;
 import com.example.library.repositories.IAccountRepository;
 import com.example.library.repositories.IReaderRepository;
 import com.example.library.repositories.ReaderRepositoryImpl;
+import com.example.library.utils.UserContext;
 import javafx.beans.property.ObjectProperty;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 
 public class AccountServiceImpl implements IAccountService {
 
     private final IAccountRepository accountRepository;
     private final IReaderRepository readerRepository;
+    private final MailService mailService;
 
     public AccountServiceImpl() {
         this.accountRepository = new AccountRepositoryImpl();
         this.readerRepository = new ReaderRepositoryImpl();
+        this.mailService = new MailService("smtp.gmail.com");
+    }
+
+    public boolean isBlocked(String username) {
+        return accountRepository.isBlocked(username);
     }
 
     @Override
@@ -55,5 +64,44 @@ public class AccountServiceImpl implements IAccountService {
             throw new RuntimeException(e);
         }
         return true;
+    }
+
+    public void resetPassword(String email) throws Exception {
+        Map<String, String> account = accountRepository.getAccountInfoByEmail(email);
+
+        System.out.println(account);
+
+        if(account == null) {
+            throw new Exception("Email not found");
+        } else {
+            String username = account.get("username");
+            String name = account.get("readerName");
+            String password = UUID.randomUUID().toString().substring(0, 8);
+
+            mailService.sendMail(
+                    email,
+                    "Reset password",
+                    String.format("Hello <b>%s<b>," +
+                            " your new password is <b>%s<b> and username is <b>%s<b>," +
+                            " please change after login", name, username,password)
+            );
+            mailService.shutdown();
+
+            accountRepository.save(new Account(username, password, "reader"));
+        }
+    }
+
+    @Override
+    public void changPassword(Account account, String newPassword) throws Exception {
+        Account existAccount = accountRepository.getAccountAndRoleByUsername(account.getUsername())
+                .orElseThrow();
+
+        if(existAccount.getPassword().equals(account.getPassword())){
+            accountRepository.save(new Account(account.getUsername(), newPassword, UserContext.getInstance().getRole()));
+
+        } else {
+            throw new Exception("Current password not match");
+        }
+
     }
 }

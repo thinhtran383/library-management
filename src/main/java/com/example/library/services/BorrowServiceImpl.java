@@ -57,5 +57,8 @@ public class BorrowServiceImpl implements IBorrowService {
         return borrowRepository.getTotalBorrowByReaderId(readerId);
     }
 
-
+    @Override
+    public boolean isReaderLate(String readerId){
+        return borrowRepository.isReaderLate(readerId);
+    }
 }

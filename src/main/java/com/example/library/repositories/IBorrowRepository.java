@@ -13,4 +13,6 @@ public interface IBorrowRepository {
     int getTotalReturn();
     int getTotalBorrowByReaderId(String readerId);
 
+    boolean isReaderLate(String readerId);
+
 }
