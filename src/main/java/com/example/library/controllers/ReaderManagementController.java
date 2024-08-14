@@ -2,9 +2,9 @@ package com.example.library.controllers;
 
 import com.example.library.App;
 import com.example.library.common.Regex;
+import com.example.library.models.Account;
 import com.example.library.models.Reader;
-import com.example.library.services.IReaderService;
-import com.example.library.services.ReaderServiceImpl;
+import com.example.library.services.*;
 import com.example.library.utils.AlertUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +19,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 import static com.example.library.common.Regex.isValid;
 
@@ -64,10 +65,12 @@ public class ReaderManagementController implements Initializable {
     private TableColumn colAddress;
 
     private final IReaderService readerService;
-
+    private final IAccountService accountService;
+    private final MailService mailService;
     public ReaderManagementController() {
         this.readerService = new ReaderServiceImpl();
-
+        this.accountService = new AccountServiceImpl();
+        this.mailService = new MailService("smtp.gmail.com");
     }
 
     @Override
@@ -119,9 +122,10 @@ public class ReaderManagementController implements Initializable {
         String email = txtEmail.getText();
         String phoneNumber = txtPhoneNumber.getText();
         String address = txtAddress.getText();
-        String dob = dpDob.getValue().toString();
+        String dob = dpDob.getValue() == null  ? "" : dpDob.getValue().toString();
+        String username = txtUsername.getText();
 
-        if (isNull(readerId, readerName, email, phoneNumber, address, dob)) {
+        if (isNull(readerId, readerName, email, phoneNumber, address, dob, username)) {
             return;
         }
 
@@ -143,8 +147,29 @@ public class ReaderManagementController implements Initializable {
                 .readerDOB(dpDob.getValue())
                 .readerAddress(address)
                 .build();
+
+        String password = UUID.randomUUID().toString().substring(0,8);
+
+        Account account = Account.builder()
+                .username(username)
+                .role("reader")
+                .password(password)
+                .build();
+
         try {
+            mailService.sendMail(
+                    email,
+                    "Your password",
+                    String.format("Hello <b>%s</b>," +
+                            " your new password is <b>%s</b> and username is <b>%s</b>," +
+                            " please change after login", reader.getReaderName(), username,password)
+            );
+            mailService.shutdown();
+
+            accountService.registerAccount(account, reader);
             readerService.saveReader(reader);
+
+            clear();
             AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Information", null, "Add reader successfully!");
         } catch (Exception e) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, e.getMessage());
@@ -160,7 +185,8 @@ public class ReaderManagementController implements Initializable {
 
         if (selectedReader.isPresent() && AlertUtil.showConfirmation("Are you sure you want to delete this reader?")) {
             readerService.deleteReader(selectedReader.get());
-            tbReaders.setItems(readerService.getAllReaders());
+            clear();
+
         }
     }
 
@@ -211,6 +237,7 @@ public class ReaderManagementController implements Initializable {
         try {
             readerService.updateReader(reader);
             AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Information", null, "Update reader successfully!");
+            clear();
         } catch (Exception e) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, e.getMessage());
             return;
@@ -219,6 +246,12 @@ public class ReaderManagementController implements Initializable {
     }
 
     public void onClickRefresh(ActionEvent actionEvent) {
+        clear();
+
+
+    }
+
+    private void clear() {
         txtAddress.clear();
         txtEmail.clear();
         txtPhoneNumber.clear();
@@ -226,10 +259,9 @@ public class ReaderManagementController implements Initializable {
         dpDob.setValue(null);
         tbReaders.getSelectionModel().clearSelection();
         txtReaderId.setText(readerService.getReaderId());
+        txtUsername.clear();
 
-        btnAdd.setVisible(true);
-        btnDelete.setVisible(false);
-        btnUpdate.setVisible(false);
+        tbReaders.setItems(readerService.getAllReaders());
     }
 
     private boolean isNull(Object... o) {
@@ -260,12 +292,13 @@ public class ReaderManagementController implements Initializable {
             tbReaders.setItems(readerService.getAllReaders());
         } else {
             tbReaders.setItems(readerService.getAllReaders().filtered(reader -> {
-// search by name, id, email, phone number, address
+// search by name, id, email, phone number, address, username
                 return reader.getReaderName().toLowerCase().contains(keyword.toLowerCase()) ||
                         reader.getReaderId().toLowerCase().contains(keyword.toLowerCase()) ||
                         reader.getReaderEmail().toLowerCase().contains(keyword.toLowerCase()) ||
                         reader.getReaderPhone().toLowerCase().contains(keyword.toLowerCase()) ||
-                        reader.getReaderAddress().toLowerCase().contains(keyword.toLowerCase());
+                        reader.getReaderAddress().toLowerCase().contains(keyword.toLowerCase()) ||
+                        reader.getUsername().toLowerCase().contains(keyword.toLowerCase());
 
             }));
         }

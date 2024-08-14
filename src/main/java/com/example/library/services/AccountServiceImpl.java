@@ -44,9 +44,9 @@ public class AccountServiceImpl implements IAccountService {
     }
 
     @Override
-    public boolean registerAccount(Account account, Reader reader) {
+    public boolean registerAccount(Account account, Reader reader) throws Exception{
         if (accountRepository.isExistUsername(account.getUsername())) {
-            return false;
+            throw new IllegalArgumentException("Username already exists");
         }
 
         boolean isExistReaderPhoneNumber = readerRepository.isExistReaderPhoneNumber(reader.getReaderPhone());
@@ -83,8 +83,8 @@ public class AccountServiceImpl implements IAccountService {
             mailService.sendMail(
                     email,
                     "Reset password",
-                    String.format("Hello <b>%s<b>," +
-                            " your new password is <b>%s<b> and username is <b>%s<b>," +
+                    String.format("Hello <b>%s</b>," +
+                            " your new password is <b>%s</b> and username is <b>%s</b>," +
                             " please change after login", name, username,password)
             );
             mailService.shutdown();

@@ -196,7 +196,7 @@ public class BookManagementController implements Initializable {
         LocalDate publishDate = dpPublish.getValue();
         String author = txtAuthor.getText().isBlank() ? cbAuthor.getValue() : txtAuthor.getText();
         // check null
-        if (isNull()) {
+        if (isNull(bookId, bookName, category, quantity, publishDate, author)) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Please fill all fields!");
             return;
         }
