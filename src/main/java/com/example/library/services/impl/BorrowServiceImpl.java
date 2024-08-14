@@ -9,6 +9,7 @@ import com.example.library.services.IBorrowService;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BorrowServiceImpl implements IBorrowService {
@@ -111,8 +112,11 @@ public class BorrowServiceImpl implements IBorrowService {
     public void approveRequest(List<String> borrowIds) {
         borrowRepository.approveRequest(borrowIds);
 
+        List<String> bookIds = borrowRepository.getAllBookIdByBorrowId(borrowIds);
 
-
+        bookIds.forEach(bookRepository::decreaseQuantity);
     }
+
+
 }
 

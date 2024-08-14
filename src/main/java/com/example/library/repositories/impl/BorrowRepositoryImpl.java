@@ -244,5 +244,22 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
         return emails;
     }
 
+    @Override
+    public List<String> getAllBookIdByBorrowId(List<String> borrowId) {
+        String sql = """
+                select bookId from borrow where borrowId in (%s);
+                """.formatted(String.join(",", borrowId));
+        ResultSet rs = dbConnect.executeQuery(sql);
+        List<String> bookIds = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                bookIds.add(rs.getString("bookId"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return bookIds;
+    }
+
 
 }

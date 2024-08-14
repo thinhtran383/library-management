@@ -25,5 +25,7 @@ public interface IBorrowRepository {
 
     List<String> getAllEmailByBorrowIds(List<String> borrowIds);
 
+    List<String> getAllBookIdByBorrowId(List<String> borrowId);
+
 
 }
