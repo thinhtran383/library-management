@@ -11,11 +11,13 @@ import java.time.LocalDate;
 @ToString
 public class Borrow {
     private String borrowId;
+    private String readerId;
     private String bookName;
     private String readerName;
     private LocalDate borrowDate;
     private LocalDate returnDate;
     private String dueDate;
+    private String status;
 
 
 

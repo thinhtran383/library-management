@@ -10,7 +10,7 @@ public interface IBookService {
     ObservableList<String> getAllBookId();
     ObservableList<Author> getAllAuthors();
     String getBookNameById(String bookId);
-    void saveBook(Book book);
+    void saveBook(Book book) throws Exception;
     void deleteBook(Book book);
     void updateBook(Book book);
     String getBookId();

@@ -1,6 +1,7 @@
-package com.example.library.repositories;
+package com.example.library.repositories.impl;
 
 import com.example.library.models.Book;
+import com.example.library.repositories.IBookRepository;
 import com.example.library.utils.DbConnect;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -77,6 +78,7 @@ public class BookRepositoryImpl implements IBookRepository {
                 """, category);
         dbConnect.executeUpdate(sql);
     }
+
     @Override
 
     public void saveAuthor(String author) {
@@ -270,12 +272,12 @@ public class BookRepositoryImpl implements IBookRepository {
 
         ResultSet rs = dbConnect.executeQuery(sql);
         int id = getTotalBook() + 1;
-        try{
-            if(rs.next()){
+        try {
+            if (rs.next()) {
                 id = rs.getInt(1);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -300,6 +302,25 @@ public class BookRepositoryImpl implements IBookRepository {
             throw new RuntimeException(e);
         }
         return 0;
+    }
+
+    @Override
+    public boolean isExistBook(String bookId) {
+        String sql = String.format("""
+                select count(*) from books where bookId = '%s'
+                """, bookId);
+
+        ResultSet rs = DbConnect.getInstance().executeQuery(sql);
+
+        try {
+            if(rs.next()){
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
     }
 
 

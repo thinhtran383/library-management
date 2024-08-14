@@ -1,7 +1,7 @@
 package com.example.library.controllers;
 
 import com.example.library.services.IStaticService;
-import com.example.library.services.StaticServiceImpl;
+import com.example.library.services.impl.StaticServiceImpl;
 import com.example.library.utils.AlertUtil;
 import com.example.library.utils.SettingUtils;
 import javafx.fxml.Initializable;

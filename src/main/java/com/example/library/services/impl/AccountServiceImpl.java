@@ -1,16 +1,15 @@
-package com.example.library.services;
+package com.example.library.services.impl;
 
 import com.example.library.models.Account;
 import com.example.library.models.Reader;
-import com.example.library.repositories.AccountRepositoryImpl;
+import com.example.library.repositories.impl.AccountRepositoryImpl;
 import com.example.library.repositories.IAccountRepository;
 import com.example.library.repositories.IReaderRepository;
-import com.example.library.repositories.ReaderRepositoryImpl;
+import com.example.library.repositories.impl.ReaderRepositoryImpl;
+import com.example.library.services.IAccountService;
 import com.example.library.utils.UserContext;
-import javafx.beans.property.ObjectProperty;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -81,7 +80,7 @@ public class AccountServiceImpl implements IAccountService {
             String password = UUID.randomUUID().toString().substring(0, 8);
 
             mailService.sendMail(
-                    email,
+                    List.of(email),
                     "Reset password",
                     String.format("Hello <b>%s</b>," +
                             " your new password is <b>%s</b> and username is <b>%s</b>," +

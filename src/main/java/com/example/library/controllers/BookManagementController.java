@@ -1,10 +1,10 @@
 package com.example.library.controllers;
 
-import com.example.library.common.Regex;
-import com.example.library.models.Author;
 import com.example.library.models.Book;
-import com.example.library.services.BookServiceImpl;
+import com.example.library.services.IBorrowService;
+import com.example.library.services.impl.BookServiceImpl;
 import com.example.library.services.IBookService;
+import com.example.library.services.impl.BorrowServiceImpl;
 import com.example.library.utils.AlertUtil;
 import com.example.library.utils.UserContext;
 import javafx.event.ActionEvent;
@@ -14,7 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
 import java.net.URL;
@@ -25,6 +25,10 @@ import java.util.ResourceBundle;
 import static com.example.library.common.Regex.isValid;
 
 public class BookManagementController implements Initializable {
+    public Button btnRequestBorrow;
+    public DatePicker dpReturn;
+    @FXML
+    private GridPane grForReader;
     @FXML
     private Text lbCategory;
     @FXML
@@ -80,12 +84,16 @@ public class BookManagementController implements Initializable {
     @FXML
     private TableColumn<Book, LocalDate> colPublishDate;
 
+
     private final IBookService bookService;
+    private final IBorrowService borrowService;
     private boolean isAddingCategory = false;
     private boolean isAddingAuthor = false;
 
+
     public BookManagementController() {
         this.bookService = new BookServiceImpl(); // dependency injection
+        this.borrowService = new BorrowServiceImpl();
     }
 
     @Override
@@ -105,10 +113,15 @@ public class BookManagementController implements Initializable {
 //        btnDelete.setVisible(false);
 //        btnUpdate.setVisible(false);
 
+        btnRequestBorrow.setDisable(true);
+
         txtBookId.setText(bookService.getBookId());
 
         if (UserContext.getInstance().getRole().equalsIgnoreCase("reader")) {
             setupForReader();
+        } else {
+            grForReader.setVisible(false);
+            btnRequestBorrow.setVisible(false);
         }
     }
 
@@ -135,10 +148,11 @@ public class BookManagementController implements Initializable {
         lbPublishDate.setVisible(false);
         lbAuthor.setVisible(false);
 
-        tbBooks.setMinSize(847,578);
+        grForReader.setVisible(true);
+        btnRequestBorrow.setVisible(true);
+        tbBooks.setMinSize(847, 400);
 
     }
-
 
 
     private void customDatePicker() {
@@ -147,6 +161,14 @@ public class BookManagementController implements Initializable {
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
                 setDisable(date.isAfter(LocalDate.now()));
+            }
+        });
+
+        dpReturn.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(date.isBefore(LocalDate.now()));
             }
         });
     }
@@ -171,6 +193,8 @@ public class BookManagementController implements Initializable {
         Optional<Book> tblBook = Optional.ofNullable(tbBooks.getSelectionModel().getSelectedItem());
 
         tblBook.ifPresent(book -> {
+            btnRequestBorrow.setDisable(false);
+
             txtBookId.setText(book.getBookId());
             txtBookName.setText(book.getBookName());
             cbCategory.setValue(book.getCategory());
@@ -208,8 +232,6 @@ public class BookManagementController implements Initializable {
         }
 
 
-
-
         Book book = Book.builder()
                 .bookId(bookId)
                 .bookName(bookName)
@@ -219,9 +241,17 @@ public class BookManagementController implements Initializable {
                 .author(author)
                 .build();
 
-        bookService.saveBook(book);
 
-        tbBooks.setItems(bookService.getAllBook());
+        try {
+            bookService.saveBook(book);
+            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Information", null, "Add new book successfully!");
+            tbBooks.setItems(bookService.getAllBook());
+            clear();
+
+        } catch (Exception e) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, e.getMessage());
+        }
+
 
     }
 
@@ -267,6 +297,7 @@ public class BookManagementController implements Initializable {
             bookService.updateBook(selectedBook.get());
             tbBooks.setItems(bookService.getAllBook());
             AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Success", null, "Update book successfully!");
+            clear();
         } else {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Please select a book to update!");
         }
@@ -276,6 +307,8 @@ public class BookManagementController implements Initializable {
     public void onClickRefresh(ActionEvent actionEvent) {
         clear();
         tbBooks.setItems(bookService.getAllBook());
+
+        btnRequestBorrow.setDisable(true);
 
     }
 
@@ -358,4 +391,23 @@ public class BookManagementController implements Initializable {
     }
 
 
+    public void onClickRequest(ActionEvent actionEvent) {
+        Book selectedBook = tbBooks.getSelectionModel().getSelectedItem();
+
+        if (selectedBook == null) {
+            return;
+        }
+
+        LocalDate returnDate = dpReturn.getValue();
+
+        if (returnDate == null) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Please choose a return date!");
+            return;
+
+        }
+
+        borrowService.requestBorrow(selectedBook.getBookId(), returnDate);
+        AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Success", null, "Request borrow successfully!");
+
+    }
 }

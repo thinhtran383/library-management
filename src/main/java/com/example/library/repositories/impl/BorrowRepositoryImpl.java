@@ -1,13 +1,17 @@
-package com.example.library.repositories;
+package com.example.library.repositories.impl;
 
 import com.example.library.models.Borrow;
+import com.example.library.repositories.IBorrowRepository;
 import com.example.library.utils.DbConnect;
+import com.example.library.utils.UserContext;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BorrowRepositoryImpl implements IBorrowRepository {
     private final DbConnect dbConnect = DbConnect.getInstance();
@@ -17,7 +21,7 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
         ObservableList<Borrow> result = FXCollections.observableArrayList();
         String sql = String.format(
                 """
-                        select br.borrowId, b.bookName, r.readerName, br.borrowDate, br.returnDate, br.dueDate from borrow br
+                        select br.borrowId, b.bookName, r.readerName, br.borrowDate, br.returnDate, br.dueDate, br.status from borrow br
                         join library.books b on b.bookId = br.bookId
                         join library.readers r on r.readerId = br.readerId
                         where r.readerId = '%s';
@@ -34,6 +38,7 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
                         .borrowDate(rs.getDate("borrowDate").toLocalDate())
                         .returnDate(rs.getDate("returnDate").toLocalDate())
                         .dueDate(rs.getString("dueDate"))
+                        .status(rs.getString("status"))
                         .build());
             }
         } catch (Exception e) {
@@ -46,7 +51,7 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
     public ObservableList<Borrow> getAllBookBorrowed() {
         ObservableList<Borrow> result = FXCollections.observableArrayList();
         String sql = """
-                select br.borrowId, b.bookName, r.readerName, br.borrowDate, br.returnDate, br.dueDate from borrow br
+                select br.borrowId, b.bookName, r.readerName, br.borrowDate, br.returnDate, br.dueDate, br.status, r.readerId from borrow br
                         join library.books b on b.bookId = br.bookId
                         join library.readers r on r.readerId = br.readerId
                      
@@ -62,6 +67,8 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
                         .borrowDate(rs.getDate("borrowDate").toLocalDate())
                         .returnDate(rs.getDate("returnDate").toLocalDate())
                         .dueDate(rs.getString("dueDate"))
+                        .status(rs.getString("status"))
+                        .readerId(rs.getString("readerId"))
                         .build());
             }
         } catch (Exception e) {
@@ -84,15 +91,27 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
 
     @Override
     public void save(Borrow borrow) {
+        String bookId = borrow.getBookName();
         String sql = String.format(
                 """
                         insert into borrow( bookId, readerId, borrowDate, returnDate)
                         values ( '%s', '%s', '%s', '%s');
-                        """, borrow.getBookName(), borrow.getReaderName(), LocalDate.now(), borrow.getReturnDate()
+                        """, bookId, borrow.getReaderName(), LocalDate.now(), borrow.getReturnDate()
         );
 
         dbConnect.executeUpdate(sql);
     }
+
+    @Override
+    public void requestBorrow(String bookId, LocalDate returnDate) {
+        String sql = String.format("""
+                insert into borrow(bookId, readerId, borrowDate, returnDate, status)
+                values('%s','%s','%s','%s','%s');
+                """, bookId, UserContext.getInstance().getReaderId(), LocalDate.now(), returnDate, "REQUEST");
+
+        dbConnect.executeUpdate(sql);
+    }
+
 
     @Override
     public int getTotalBorrow() {
@@ -182,6 +201,47 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
             throw new RuntimeException(e);
         }
         return false;
+    }
+
+    @Override
+    public void approveRequest(List<String> borrowIds) {
+        String sql = """
+                update borrow
+                set status = ''
+                where borrowId in (%s);
+                """.formatted(String.join(",", borrowIds));
+        dbConnect.executeUpdate(sql);
+    }
+
+    @Override
+    public void deleteRequest(List<String> borrowId) {
+        String sql = """
+                delete from borrow
+                where borrowId in (%s);
+                """.formatted(String.join(",", borrowId));
+        dbConnect.executeUpdate(sql);
+    }
+
+    @Override
+    public List<String> getAllEmailByBorrowIds(List<String> borrowIds) {
+        String sql = """
+                SELECT DISTINCT r.readerEmail
+                FROM borrow b
+                         JOIN readers r ON b.readerId = r.readerId
+                WHERE b.borrowId IN (%s)
+                """.formatted(String.join(",", borrowIds));
+
+        ResultSet rs = dbConnect.executeQuery(sql);
+        List<String> emails =new ArrayList<>();
+        try {
+            while (rs.next()) {
+                emails.add(rs.getString("readerEmail"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return emails;
     }
 
 

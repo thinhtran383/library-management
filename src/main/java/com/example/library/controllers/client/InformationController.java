@@ -1,10 +1,8 @@
 package com.example.library.controllers.client;
 
 import com.example.library.models.Reader;
-import com.example.library.services.BorrowServiceImpl;
-import com.example.library.services.IBorrowService;
 import com.example.library.services.IReaderService;
-import com.example.library.services.ReaderServiceImpl;
+import com.example.library.services.impl.ReaderServiceImpl;
 import com.example.library.utils.AlertUtil;
 import com.example.library.utils.UserContext;
 import javafx.event.ActionEvent;

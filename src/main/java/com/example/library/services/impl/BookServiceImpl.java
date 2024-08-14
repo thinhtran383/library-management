@@ -1,11 +1,12 @@
-package com.example.library.services;
+package com.example.library.services.impl;
 
 import com.example.library.models.Author;
 import com.example.library.models.Book;
-import com.example.library.repositories.AuthorRepositoryImpl;
-import com.example.library.repositories.BookRepositoryImpl;
+import com.example.library.repositories.impl.AuthorRepositoryImpl;
+import com.example.library.repositories.impl.BookRepositoryImpl;
 import com.example.library.repositories.IAuthorRepository;
 import com.example.library.repositories.IBookRepository;
+import com.example.library.services.IBookService;
 import javafx.collections.ObservableList;
 
 import java.util.UUID;
@@ -47,7 +48,13 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public void saveBook(Book book) {
+    public void saveBook(Book book) throws Exception{
+        boolean isExist = bookRepository.isExistBook(book.getBookId());
+
+        if(isExist){
+            throw new Exception("This book already existed");
+        }
+
         setBook(book);
         bookRepository.save(book);
 

@@ -1,7 +1,7 @@
 package com.example.library.controllers;
 
 import com.example.library.models.Borrow;
-import com.example.library.services.BorrowServiceImpl;
+import com.example.library.services.impl.BorrowServiceImpl;
 import com.example.library.services.IBorrowService;
 import com.example.library.utils.UserContext;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -13,11 +13,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.Setter;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+@Log
 public class BorrowHistoryController implements Initializable {
     @FXML
     private Button btnReturn;
@@ -46,7 +49,8 @@ public class BorrowHistoryController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadBorrows();
         initForReader();
-        System.out.println(readerId);
+
+        log.info(String.format("From %s ReaderId: %s", this.getClass().getName(), readerId));
     }
 
     private void loadBorrows() {
@@ -59,6 +63,7 @@ public class BorrowHistoryController implements Initializable {
 
         tbBorrows.setItems(borrowService.getBorrowByReaderId(readerId));
 
+
     }
 
     private void initForReader(){
@@ -67,6 +72,8 @@ public class BorrowHistoryController implements Initializable {
 
             tbBorrows.setMinSize(847,578);
         }
+
+
     }
 
     public void onClickReturn(ActionEvent actionEvent) {

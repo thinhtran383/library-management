@@ -1,7 +1,7 @@
 package com.example.library.controllers;
 
 import com.example.library.App;
-import com.example.library.services.BorrowServiceImpl;
+import com.example.library.services.impl.BorrowServiceImpl;
 import com.example.library.services.IBorrowService;
 import com.example.library.utils.AlertUtil;
 import com.example.library.utils.UserContext;
@@ -26,7 +26,7 @@ public class DashboardController implements Initializable {
 
     private final IBorrowService borrowService;
 
-    public DashboardController(){
+    public DashboardController() {
         this.borrowService = new BorrowServiceImpl();
     }
 
@@ -43,13 +43,13 @@ public class DashboardController implements Initializable {
 
     }
 
-    public void initMenuByRole(String role){
-        if(role.equalsIgnoreCase("reader")){
+    public void initMenuByRole(String role) {
+        if (role.equalsIgnoreCase("reader")) {
             lstMenu.getItems().addAll("Information", "Available book", "History borrow", "Request borrow");
         }
 
-        if(role.equalsIgnoreCase("librarian")){
-            lstMenu.getItems().addAll("Book management", "Reader management", "Borrow management", "Request management", "Statistical");
+        if (role.equalsIgnoreCase("librarian")) {
+            lstMenu.getItems().addAll("Book management", "Reader management", "Request management", "Statistical");
         }
 
         lstMenu.getSelectionModel().selectFirst();
@@ -80,7 +80,11 @@ public class DashboardController implements Initializable {
                 frm = "/com/example/library/StaticFrm.fxml";
                 break;
 
-                // client
+            case "Request management":
+                frm = "/com/example/library/RequestFrm.fxml";
+                break;
+
+            // client
             case "Available book":
                 frm = "/com/example/library/BookManagementFrm.fxml";
                 break;
@@ -90,6 +94,10 @@ public class DashboardController implements Initializable {
             case "History borrow":
                 frm = "/com/example/library/BorrowHistoryFrm.fxml";
                 BorrowHistoryController.setReaderId(UserContext.getInstance().getReaderId());
+                break;
+            case "Request borrow":
+                frm = "/com/example/library/RequestFrm.fxml";
+                break;
             default:
                 break;
         }
@@ -99,7 +107,7 @@ public class DashboardController implements Initializable {
             pane.getChildren().clear();
             AnchorPane newPane = loader.load();
             pane.getChildren().add(newPane);
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -107,10 +115,12 @@ public class DashboardController implements Initializable {
     }
 
     public void onClickLogout(ActionEvent actionEvent) throws IOException {
+        UserContext.getInstance().clearContext();
+
         App.setRoot("LoginFrm");
     }
 
     public void onClickChangePassword(ActionEvent actionEvent) throws IOException {
-        App.setRootPop("ChangePassFrm","Change password", false);
+        App.setRootPop("ChangePassFrm", "Change password", false);
     }
 }

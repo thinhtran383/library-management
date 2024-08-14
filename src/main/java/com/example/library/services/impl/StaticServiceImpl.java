@@ -1,6 +1,10 @@
-package com.example.library.services;
+package com.example.library.services.impl;
 
 import com.example.library.repositories.*;
+import com.example.library.repositories.impl.BookRepositoryImpl;
+import com.example.library.repositories.impl.BorrowRepositoryImpl;
+import com.example.library.repositories.impl.ReaderRepositoryImpl;
+import com.example.library.services.IStaticService;
 
 public class StaticServiceImpl implements IStaticService {
 

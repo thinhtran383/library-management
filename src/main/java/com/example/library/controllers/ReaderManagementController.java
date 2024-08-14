@@ -1,10 +1,12 @@
 package com.example.library.controllers;
 
 import com.example.library.App;
-import com.example.library.common.Regex;
 import com.example.library.models.Account;
 import com.example.library.models.Reader;
 import com.example.library.services.*;
+import com.example.library.services.impl.AccountServiceImpl;
+import com.example.library.services.impl.MailService;
+import com.example.library.services.impl.ReaderServiceImpl;
 import com.example.library.utils.AlertUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -157,18 +160,16 @@ public class ReaderManagementController implements Initializable {
                 .build();
 
         try {
+            accountService.registerAccount(account, reader);
+            readerService.saveReader(reader);
             mailService.sendMail(
-                    email,
+                    List.of(email),
                     "Your password",
                     String.format("Hello <b>%s</b>," +
                             " your new password is <b>%s</b> and username is <b>%s</b>," +
                             " please change after login", reader.getReaderName(), username,password)
             );
             mailService.shutdown();
-
-            accountService.registerAccount(account, reader);
-            readerService.saveReader(reader);
-
             clear();
             AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Information", null, "Add reader successfully!");
         } catch (Exception e) {

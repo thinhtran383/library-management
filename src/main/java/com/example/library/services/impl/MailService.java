@@ -1,5 +1,7 @@
-package com.example.library.services;
+package com.example.library.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +26,7 @@ public class MailService {
         this.executor = Executors.newSingleThreadExecutor();
     }
 
-    public void sendMail(String to, String subject, String msg) {
+    public void sendMail(List<String> to, String subject, String msg) {
         String from = username;
         executor.submit(() -> {
             try {
@@ -36,7 +38,19 @@ public class MailService {
 
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(from));
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+
+                List<InternetAddress> addresses = new ArrayList<>();
+                for (String recipient : to) {
+                    try {
+                        addresses.add(new InternetAddress(recipient));
+                    } catch (AddressException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                InternetAddress[] addressArray = addresses.toArray(new InternetAddress[0]);
+                message.setRecipients(Message.RecipientType.TO, addressArray);
+
                 message.setSubject(subject);
 
                 MimeBodyPart mimeBodyPart = new MimeBodyPart();
@@ -61,7 +75,7 @@ public class MailService {
 
     public static void main(String[] args) {
         MailService mailService = new MailService("smtp.gmail.com");
-        mailService.sendMail("thinhtran383.au@gmail.com", "Test", "<h1>Test<h1>");
+        mailService.sendMail(List.of("thinhtran383.au@gmail.com"), "Test", "<h1>Test<h1>");
         mailService.shutdown();
     }
 

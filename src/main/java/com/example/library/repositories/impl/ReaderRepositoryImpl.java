@@ -1,6 +1,7 @@
-package com.example.library.repositories;
+package com.example.library.repositories.impl;
 
 import com.example.library.models.Reader;
+import com.example.library.repositories.IReaderRepository;
 import com.example.library.utils.DbConnect;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
