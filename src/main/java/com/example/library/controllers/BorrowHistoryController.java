@@ -5,12 +5,14 @@ import com.example.library.services.impl.BorrowServiceImpl;
 import com.example.library.services.IBorrowService;
 import com.example.library.utils.UserContext;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import lombok.Setter;
@@ -18,11 +20,14 @@ import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Log
 public class BorrowHistoryController implements Initializable {
+    @FXML
+    private TextField txtSearch;
     @FXML
     private Button btnReturn;
     @FXML
@@ -69,11 +74,11 @@ public class BorrowHistoryController implements Initializable {
 
     }
 
-    private void initForReader(){
-        if(UserContext.getInstance().getRole().equalsIgnoreCase("reader")){
+    private void initForReader() {
+        if (UserContext.getInstance().getRole().equalsIgnoreCase("reader")) {
             btnReturn.setVisible(false);
 
-            tbBorrows.setMinSize(847,578);
+            tbBorrows.setMinSize(847, 578);
         }
 
 
@@ -89,5 +94,18 @@ public class BorrowHistoryController implements Initializable {
     }
 
     public void onSearch(KeyEvent keyEvent) {
+        String keyword = txtSearch.getText();
+        if(keyword.isEmpty()){
+            tbBorrows.setItems(borrowService.getBorrowByReaderId(readerId));
+            return;
+        }
+
+        ObservableList<Borrow> borrows = borrowService.getBorrowByReaderId(readerId);
+        ObservableList<Borrow> filteredBorrows = borrows.filtered(borrow ->
+                borrow.getBookName().toLowerCase().contains(keyword.toLowerCase()));
+
+
+        tbBorrows.setItems(filteredBorrows);
+
     }
 }

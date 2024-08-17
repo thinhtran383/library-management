@@ -6,10 +6,12 @@ import com.example.library.services.impl.BorrowServiceImpl;
 import com.example.library.services.impl.MailService;
 import com.example.library.utils.UserContext;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,12 +23,13 @@ public class RequestController implements Initializable {
 
     private final IBorrowService borrowService;
     public TableColumn<Borrow, Integer> colId;
-    public TableView tbRequest;
+    public TableView<Borrow> tbRequest;
     public TableColumn colReaderName;
     public TableColumn colBookName;
     public TableColumn colBorrowDate;
     public TableColumn colReturnDate;
     public Button btnApprove;
+    public TextField txtSearch;
     private List<String> selectedBorrowId;
     private final MailService mailService;
 
@@ -44,6 +47,7 @@ public class RequestController implements Initializable {
             setUpForReader();
         } else {
             btnApprove.setOnAction(this::onClickApprove);
+            txtSearch.setPromptText("Search by Book Name or Reader Name");
         }
     }
 
@@ -91,10 +95,10 @@ public class RequestController implements Initializable {
 
     private void setUpForReader() {
         colReaderName.setVisible(false);
-
         btnApprove.setText("Delete Request");
-
         btnApprove.setOnAction(this::onClickDeleteRequest);
+
+        txtSearch.setPromptText("Search by Book Name");
     }
 
     public void onClickApprove(ActionEvent actionEvent) {
@@ -112,7 +116,6 @@ public class RequestController implements Initializable {
         mailService.shutdown();
 
 
-
     }
 
     public void onClickDeleteRequest(ActionEvent actionEvent) {
@@ -120,4 +123,25 @@ public class RequestController implements Initializable {
         setDataToTable();
     }
 
+    public void onSearch(KeyEvent keyEvent) {
+        String keyword = txtSearch.getText();
+        if (keyword.isEmpty()) {
+            setDataToTable();
+            return;
+        }
+        if (UserContext.getInstance().getRole().equals("Reader")) {
+            ObservableList<Borrow> borrows = borrowService.getAllRequestByReaderId(UserContext.getInstance().getReaderId());
+            ObservableList<Borrow> filteredBorrows = borrows.filtered(borrow ->
+                    borrow.getBookName().toLowerCase().contains(keyword.toLowerCase()));
+            tbRequest.setItems(filteredBorrows);
+        } else {
+            ObservableList<Borrow> borrows = borrowService.getAllRequestBorrow();
+            ObservableList<Borrow> filteredBorrows = borrows.filtered(borrow ->
+                    borrow.getBookName().toLowerCase().contains(keyword.toLowerCase()) ||
+                            borrow.getReaderName().toLowerCase().contains(keyword.toLowerCase())
+
+            );
+            tbRequest.setItems(filteredBorrows);
+        }
+    }
 }
