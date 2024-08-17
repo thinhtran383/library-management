@@ -19,10 +19,7 @@ import javafx.scene.input.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.UUID;
+import java.util.*;
 
 import static com.example.library.common.Regex.isValid;
 
@@ -163,13 +160,14 @@ public class ReaderManagementController implements Initializable {
             accountService.registerAccount(account, reader);
             readerService.saveReader(reader);
             mailService.sendMail(
-                    List.of(email),
-                    "Your password",
-                    String.format("Hello <b>%s</b>," +
-                            " your new password is <b>%s</b> and username is <b>%s</b>," +
-                            " please change after login", reader.getReaderName(), username,password)
+                    Map.of(
+                            email,
+                            String.format("Hello <b>%s</b>," +
+                                    " your account has been created successfully with username <b>%s</b> and password <b>%s</b>," +
+                                    " please change after login", readerName, username, password)
+                    ),
+                    "New account"
             );
-            mailService.shutdown();
             clear();
             AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Information", null, "Add reader successfully!");
         } catch (Exception e) {

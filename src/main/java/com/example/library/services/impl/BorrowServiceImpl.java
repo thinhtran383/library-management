@@ -1,5 +1,6 @@
 package com.example.library.services.impl;
 
+import com.example.library.models.Book;
 import com.example.library.models.Borrow;
 import com.example.library.repositories.*;
 import com.example.library.repositories.impl.BookRepositoryImpl;
@@ -12,6 +13,7 @@ import javafx.collections.ObservableList;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BorrowServiceImpl implements IBorrowService {
     private final IBorrowRepository borrowRepository;
@@ -114,13 +116,28 @@ public class BorrowServiceImpl implements IBorrowService {
     }
 
     @Override
+    public Map<String, String> getAllEmailWithMessagesByBorrowIds(List<String> borrowIds) {
+        return borrowRepository.getAllEmailWithMessagesByBorrowIds(borrowIds);
+    }
+
+    @Override
+    public void declineRequest(List<String> borrowId) {
+        borrowRepository.declineRequest(borrowId);
+    }
+
+    @Override
     public void approveRequest(List<String> borrowIds) {
         borrowRepository.approveRequest(borrowIds);
+
 
         List<String> bookIds = borrowRepository.getAllBookIdByBorrowId(borrowIds);
 
         bookIds.forEach(bookRepository::decreaseQuantity);
     }
+
+
+
+
 
 
 }

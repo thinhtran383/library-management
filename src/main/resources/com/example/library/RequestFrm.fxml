@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="568.0" prefWidth="885.0" stylesheets="@../../../primer-light.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.RequestController">
+<AnchorPane prefHeight="568.0" prefWidth="947.0" stylesheets="@../../../primer-light.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.RequestController">
    <children>
-      <TableView fx:id="tbRequest" layoutY="74.0" prefHeight="371.0" prefWidth="885.0" AnchorPane.bottomAnchor="122.88888888888886" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.4444444444444571" AnchorPane.topAnchor="74.0">
+      <TableView fx:id="tbRequest" layoutY="74.0" prefHeight="371.0" prefWidth="906.0" AnchorPane.bottomAnchor="123.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="74.0">
         <columns>
           <TableColumn fx:id="colId" prefWidth="92.8888897895813" text="ID">
                <graphic>
@@ -50,7 +50,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colReturnDate" prefWidth="265.333251953125" text="Return Date">
+            <TableColumn fx:id="colReturnDate" prefWidth="187.555419921875" text="Return Date">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -59,8 +59,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colSelect" minWidth="0.0" prefWidth="0.0">
-            </TableColumn>
+            <TableColumn fx:id="colSelect" prefWidth="101.333251953125" />
         </columns>
       </TableView>
       <Button fx:id="btnApprove" layoutX="404.0" layoutY="488.0" mnemonicParsing="false" text="Approve" />
@@ -70,5 +69,6 @@
          </font>
       </Label>
       <TextField fx:id="txtSearch" layoutX="164.0" layoutY="10.0" onKeyPressed="#onSearch" prefHeight="36.0" prefWidth="211.0" />
+      <Button fx:id="btnReject" layoutX="516.0" layoutY="488.0" mnemonicParsing="false" onAction="#onClickReject" prefHeight="36.0" prefWidth="77.0" text="Reject" />
    </children>
 </AnchorPane>

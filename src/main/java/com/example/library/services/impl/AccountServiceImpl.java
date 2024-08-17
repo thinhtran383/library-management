@@ -43,7 +43,7 @@ public class AccountServiceImpl implements IAccountService {
     }
 
     @Override
-    public boolean registerAccount(Account account, Reader reader) throws Exception{
+    public boolean registerAccount(Account account, Reader reader) throws Exception {
         if (accountRepository.isExistUsername(account.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
         }
@@ -72,7 +72,7 @@ public class AccountServiceImpl implements IAccountService {
 
         System.out.println(account);
 
-        if(account == null) {
+        if (account == null) {
             throw new Exception("Email not found");
         } else {
             String username = account.get("username");
@@ -80,13 +80,12 @@ public class AccountServiceImpl implements IAccountService {
             String password = UUID.randomUUID().toString().substring(0, 8);
 
             mailService.sendMail(
-                    List.of(email),
-                    "Reset password",
-                    String.format("Hello <b>%s</b>," +
+                    Map.of(email, String.format("Hello <b>%s</b>," +
                             " your new password is <b>%s</b> and username is <b>%s</b>," +
-                            " please change after login", name, password, username)
+                            " please change after login", name, password, username)),
+                    "Reset password"
+
             );
-            mailService.shutdown();
 
             accountRepository.save(new Account(username, password, "reader"));
         }
@@ -97,7 +96,7 @@ public class AccountServiceImpl implements IAccountService {
         Account existAccount = accountRepository.getAccountAndRoleByUsername(account.getUsername())
                 .orElseThrow();
 
-        if(existAccount.getPassword().equals(account.getPassword())){
+        if (existAccount.getPassword().equals(account.getPassword())) {
             accountRepository.save(new Account(account.getUsername(), newPassword, UserContext.getInstance().getRole()));
 
         } else {

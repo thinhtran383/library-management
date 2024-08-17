@@ -11,7 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BorrowRepositoryImpl implements IBorrowRepository {
     private final DbConnect dbConnect = DbConnect.getInstance();
@@ -222,6 +225,7 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
         dbConnect.executeUpdate(sql);
     }
 
+
     @Override
     public List<String> getAllEmailByBorrowIds(List<String> borrowIds) {
         String sql = """
@@ -232,7 +236,7 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
                 """.formatted(String.join(",", borrowIds));
 
         ResultSet rs = dbConnect.executeQuery(sql);
-        List<String> emails =new ArrayList<>();
+        List<String> emails = new ArrayList<>();
         try {
             while (rs.next()) {
                 emails.add(rs.getString("readerEmail"));
@@ -271,7 +275,7 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
         ResultSet rs = dbConnect.executeQuery(sql);
 
         try {
-            if(rs.next()){
+            if (rs.next()) {
                 return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
@@ -281,10 +285,90 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
         return false;
     }
 
+    @Override
+    public Map<String, String> getAllEmailWithMessagesByBorrowIds(List<String> borrowIds) {
+        String sql = """
+                SELECT r.readerEmail, bks.bookName, br.status
+                FROM borrow br
+                         JOIN readers r ON br.readerId = r.readerId
+                         JOIN books bks ON br.bookId = bks.bookId
+                WHERE br.borrowId IN (%s)
+                """.formatted(borrowIds.stream().map(id -> "'" + id + "'").collect(Collectors.joining(",")));
 
-    public static void main(String[] args) {
-        BorrowRepositoryImpl borrowRepository = new BorrowRepositoryImpl();
+        ResultSet rs = DbConnect.getInstance().executeQuery(sql);
+        Map<String, Map<String, List<String>>> emailBooksStatusMap = new HashMap<>();
 
-        System.out.println(borrowRepository.isAlreadyRequest("R26BF1", "B005"));
+        try {
+            while (rs != null && rs.next()) {
+                String email = rs.getString("readerEmail");
+                String bookName = rs.getString("bookName");
+                String status = rs.getString("status");
+
+                // Add the book name to the list associated with the email and status
+                emailBooksStatusMap
+                        .computeIfAbsent(email, k -> new HashMap<>())
+                        .computeIfAbsent(status, k -> new ArrayList<>())
+                        .add(bookName);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        Map<String, String> emailMessages = new HashMap<>();
+        for (Map.Entry<String, Map<String, List<String>>> entry : emailBooksStatusMap.entrySet()) {
+            String email = entry.getKey();
+            Map<String, List<String>> booksByStatus = entry.getValue();
+
+            StringBuilder message = new StringBuilder();
+            message.append("<div style='font-family: Arial, sans-serif; padding: 10px;'>");
+
+            // Append approved books with green title if they exist
+            if (booksByStatus.containsKey("REQUEST")) {
+                List<String> approvedBooks = booksByStatus.get("REQUEST");
+                message.append("<h2 style='color: #4CAF50;'>Your request has been approved!</h2>");
+                message.append("<p>Please come to the library to get the following books:</p>");
+                message.append("<ul style='list-style-type: none; padding: 0;'>");
+
+                for (String bookName : approvedBooks) {
+                    message.append("<li style='padding: 5px; background-color: #f9f9f9; margin-bottom: 5px; border-radius: 5px;'>")
+                            .append("&#x2022; ").append(bookName).append("</li>");
+                }
+
+                message.append("</ul>");
+            }
+
+            // Append declined books with red title if they exist
+            if (booksByStatus.containsKey("DECLINE")) {
+                List<String> declinedBooks = booksByStatus.get("DECLINE");
+                message.append("<h2 style='color: #FF0000;'>Your request has been declined!</h2>");
+                message.append("<p>The following books have been declined:</p>");
+                message.append("<ul style='list-style-type: none; padding: 0;'>");
+
+                for (String bookName : declinedBooks) {
+                    message.append("<li style='padding: 5px; background-color: #f9f9f9; margin-bottom: 5px; border-radius: 5px;'>")
+                            .append("&#x2022; ").append(bookName).append("</li>");
+                }
+
+                message.append("</ul>");
+            }
+
+            message.append("<p>Thank you for using our library services!</p>");
+            message.append("</div>");
+
+            emailMessages.put(email, message.toString());
+        }
+
+        return emailMessages;
+    }
+
+
+    @Override
+    public void declineRequest(List<String> borrowIds) {
+        String sql = """
+                update borrow
+                set status = 'DECLINE'
+                where borrowId in (%s);
+                """.formatted(String.join(",", borrowIds));
+        dbConnect.executeUpdate(sql);
     }
 }

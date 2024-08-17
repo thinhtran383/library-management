@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface IBorrowRepository {
     ObservableList<Borrow> getBorrowByReaderId(String readerId);
@@ -28,6 +29,9 @@ public interface IBorrowRepository {
     List<String> getAllBookIdByBorrowId(List<String> borrowId);
 
     boolean isAlreadyRequest(String readerId, String bookId);
+
+    Map<String, String> getAllEmailWithMessagesByBorrowIds(List<String> borrowIds);
+    void declineRequest(List<String> borrowId);
 
 
 }

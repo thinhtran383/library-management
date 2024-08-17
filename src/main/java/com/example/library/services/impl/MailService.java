@@ -2,6 +2,7 @@ package com.example.library.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,7 +27,7 @@ public class MailService {
         this.executor = Executors.newSingleThreadExecutor();
     }
 
-    public void sendMail(List<String> to, String subject, String msg) {
+    public void sendMail(Map<String, String> emailMessages, String subject) {
         String from = username;
         executor.submit(() -> {
             try {
@@ -36,48 +37,40 @@ public class MailService {
                     }
                 });
 
-                Message message = new MimeMessage(session);
-                message.setFrom(new InternetAddress(from));
+                for (Map.Entry<String, String> entry : emailMessages.entrySet()) {
+                    String email = entry.getKey();
+                    String msg = entry.getValue();
 
-                List<InternetAddress> addresses = new ArrayList<>();
-                for (String recipient : to) {
-                    try {
-                        addresses.add(new InternetAddress(recipient));
-                    } catch (AddressException e) {
-                        e.printStackTrace();
-                    }
+                    Message message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress(from));
+                    message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
+
+                    message.setSubject(subject);
+
+                    MimeBodyPart mimeBodyPart = new MimeBodyPart();
+                    mimeBodyPart.setContent(msg, "text/html; charset=utf-8");
+
+                    Multipart multipart = new MimeMultipart();
+                    multipart.addBodyPart(mimeBodyPart);
+
+                    message.setContent(multipart);
+
+                    Transport.send(message);
                 }
-
-                InternetAddress[] addressArray = addresses.toArray(new InternetAddress[0]);
-                message.setRecipients(Message.RecipientType.TO, addressArray);
-
-                message.setSubject(subject);
-
-                MimeBodyPart mimeBodyPart = new MimeBodyPart();
-                mimeBodyPart.setContent(msg, "text/html; charset=utf-8");
-
-                Multipart multipart = new MimeMultipart();
-                multipart.addBodyPart(mimeBodyPart);
-
-                message.setContent(multipart);
-
-                Transport.send(message);
-
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
         });
     }
-
     public void shutdown() {
         executor.shutdown();
     }
 
-    public static void main(String[] args) {
-        MailService mailService = new MailService("smtp.gmail.com");
-        mailService.sendMail(List.of("thinhtran383.au@gmail.com"), "Test", "<h1>Test<h1>");
-        mailService.shutdown();
-    }
+//    public static void main(String[] args) {
+//        MailService mailService = new MailService("smtp.gmail.com");
+//        mailService.sendMail(List.of("thinhtran383.au@gmail.com"), "Test", "<h1>Test<h1>");
+//        mailService.shutdown();
+//    }
 
 
 }

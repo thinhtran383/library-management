@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface IBorrowService {
     ObservableList<Borrow> getBorrowByReaderId(String readerId);
@@ -29,4 +30,8 @@ public interface IBorrowService {
     void deleteRequest(List<String> borrowId);
 
     List<String> getAllEmailByBorrowIds(List<String> borrowIds);
+
+    Map<String, String> getAllEmailWithMessagesByBorrowIds(List<String> borrowIds);
+
+    void declineRequest(List<String> borrowId);
 }

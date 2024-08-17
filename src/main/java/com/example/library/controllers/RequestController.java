@@ -16,6 +16,7 @@ import javafx.scene.input.KeyEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class RequestController implements Initializable {
@@ -30,6 +31,7 @@ public class RequestController implements Initializable {
     public TableColumn colReturnDate;
     public Button btnApprove;
     public TextField txtSearch;
+    public Button btnReject;
     private List<String> selectedBorrowId;
     private final MailService mailService;
 
@@ -48,6 +50,7 @@ public class RequestController implements Initializable {
         } else {
             btnApprove.setOnAction(this::onClickApprove);
             txtSearch.setPromptText("Search by Book Name or Reader Name");
+            btnReject.setVisible(true);
         }
     }
 
@@ -97,25 +100,36 @@ public class RequestController implements Initializable {
         colReaderName.setVisible(false);
         btnApprove.setText("Delete Request");
         btnApprove.setOnAction(this::onClickDeleteRequest);
-
+        btnReject.setVisible(false);
         txtSearch.setPromptText("Search by Book Name");
     }
 
     public void onClickApprove(ActionEvent actionEvent) {
-        borrowService.approveRequest(selectedBorrowId);
-        setDataToTable();
+        Map<String, String> emailMessages = borrowService.getAllEmailWithMessagesByBorrowIds(selectedBorrowId);
 
-
-        List<String> emails = borrowService.getAllEmailByBorrowIds(selectedBorrowId);
         mailService.sendMail(
-                emails,
-                "Request Approved",
-                "Your request has been approved please come to the library to get the book."
+                emailMessages,
+                "Request Approved"
         );
 
-        mailService.shutdown();
+
+        borrowService.approveRequest(selectedBorrowId);
+        setDataToTable();
+    }
+
+    public void onClickReject(ActionEvent actionEvent) {
+        borrowService.declineRequest(selectedBorrowId);
+
+        Map<String, String> emailMessages = borrowService.getAllEmailWithMessagesByBorrowIds(selectedBorrowId);
+
+        mailService.sendMail(
+                emailMessages,
+                "Request Declined"
+        );
 
 
+        setDataToTable();
+        borrowService.deleteRequest(selectedBorrowId);
     }
 
     public void onClickDeleteRequest(ActionEvent actionEvent) {
@@ -144,4 +158,6 @@ public class RequestController implements Initializable {
             tbRequest.setItems(filteredBorrows);
         }
     }
+
+
 }
