@@ -1,5 +1,6 @@
 package com.example.library.controllers.client;
 
+import com.example.library.common.Regex;
 import com.example.library.models.Reader;
 import com.example.library.services.IReaderService;
 import com.example.library.services.impl.ReaderServiceImpl;
@@ -75,6 +76,16 @@ public class InformationController implements Initializable {
     }
 
     public void onClickSave(ActionEvent actionEvent) {
+        if(!Regex.isValid("EMAIL", txtEmail.getText())) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Email is invalid");
+            return;
+        }
+
+        if(!Regex.isValid("PHONE_NUMBER", txtPhoneNumber.getText())) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Phone number is invalid");
+            return;
+        }
+
         Reader reader = Reader.builder()
                 .readerId(txtReaderId.getText())
                 .readerEmail(txtEmail.getText())

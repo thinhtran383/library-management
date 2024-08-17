@@ -19,7 +19,7 @@ public interface IBorrowService {
 
     boolean isReaderLate(String readerId);
 
-    void requestBorrow(String bookId, LocalDate returnDate);
+    void requestBorrow(String bookId, LocalDate returnDate) throws Exception;
     ObservableList<Borrow> getAllRequestByReaderId(String readerId);
 
     void approveRequest(List<String> borrowId);

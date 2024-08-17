@@ -49,7 +49,7 @@ public class DashboardController implements Initializable {
         }
 
         if (role.equalsIgnoreCase("librarian")) {
-            lstMenu.getItems().addAll("Book management", "Reader management", "Request management", "Statistical");
+            lstMenu.getItems().addAll("Information","Book management", "Reader management", "Request management", "Statistical");
         }
 
         lstMenu.getSelectionModel().selectFirst();
@@ -83,6 +83,7 @@ public class DashboardController implements Initializable {
             case "Request management":
                 frm = "/com/example/library/RequestFrm.fxml";
                 break;
+
 
             // client
             case "Available book":

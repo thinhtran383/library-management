@@ -406,7 +406,12 @@ public class BookManagementController implements Initializable {
 
         }
 
-        borrowService.requestBorrow(selectedBook.getBookId(), returnDate);
+        try {
+            borrowService.requestBorrow(selectedBook.getBookId(), returnDate);
+        } catch (Exception e) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, e.getMessage());
+            return;
+        }
         AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Success", null, "Request borrow successfully!");
 
     }

@@ -6,6 +6,7 @@ import com.example.library.repositories.impl.BookRepositoryImpl;
 import com.example.library.repositories.impl.BorrowRepositoryImpl;
 import com.example.library.repositories.impl.ReaderRepositoryImpl;
 import com.example.library.services.IBorrowService;
+import com.example.library.utils.UserContext;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
@@ -78,7 +79,11 @@ public class BorrowServiceImpl implements IBorrowService {
     }
 
     @Override
-    public void requestBorrow(String bookId, LocalDate returnDate) {
+    public void requestBorrow(String bookId, LocalDate returnDate) throws Exception {
+        boolean isBorrowed = borrowRepository.isAlreadyRequest(UserContext.getInstance().getReaderId(), bookId);
+        if(isBorrowed) {
+            throw new Exception("You have already requested this book");
+        }
         borrowRepository.requestBorrow(bookId, returnDate);
     }
 

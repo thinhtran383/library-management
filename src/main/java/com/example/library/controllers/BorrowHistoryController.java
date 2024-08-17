@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import lombok.Setter;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,8 @@ public class BorrowHistoryController implements Initializable {
         loadBorrows();
         initForReader();
 
+        btnReturn.setVisible(false);
+
         log.info(String.format("From %s ReaderId: %s", this.getClass().getName(), readerId));
     }
 
@@ -83,5 +86,8 @@ public class BorrowHistoryController implements Initializable {
             borrowService.returnBook(borrow);
             tbBorrows.setItems(borrowService.getBorrowByReaderId(readerId));
         });
+    }
+
+    public void onSearch(KeyEvent keyEvent) {
     }
 }

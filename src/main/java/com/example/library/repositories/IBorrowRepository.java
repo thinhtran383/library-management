@@ -27,5 +27,7 @@ public interface IBorrowRepository {
 
     List<String> getAllBookIdByBorrowId(List<String> borrowId);
 
+    boolean isAlreadyRequest(String readerId, String bookId);
+
 
 }

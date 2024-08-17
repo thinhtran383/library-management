@@ -261,5 +261,30 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
         return bookIds;
     }
 
+    @Override
+    public boolean isAlreadyRequest(String readerId, String bookId) {
+        String sql = String.format("""
+                select count(*) from borrow
+                where bookId = '%s' and readerId = '%s' and dueDate is null;
+                """, bookId, readerId);
 
+        ResultSet rs = dbConnect.executeQuery(sql);
+
+        try {
+            if(rs.next()){
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
+
+    public static void main(String[] args) {
+        BorrowRepositoryImpl borrowRepository = new BorrowRepositoryImpl();
+
+        System.out.println(borrowRepository.isAlreadyRequest("R26BF1", "B005"));
+    }
 }

@@ -84,7 +84,7 @@ public class AccountServiceImpl implements IAccountService {
                     "Reset password",
                     String.format("Hello <b>%s</b>," +
                             " your new password is <b>%s</b> and username is <b>%s</b>," +
-                            " please change after login", name, username,password)
+                            " please change after login", name, password, username)
             );
             mailService.shutdown();
 

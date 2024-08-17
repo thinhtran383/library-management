@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="456.0" prefWidth="777.0" stylesheets="@../../../primer-light.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.BorrowHistoryController">
    <children>
-      <TableView fx:id="tbBorrows" prefHeight="279.0" prefWidth="777.0">
+      <TableView fx:id="tbBorrows" layoutX="-2.0" layoutY="78.0" prefHeight="279.0" prefWidth="777.0">
         <columns>
           <TableColumn fx:id="colBorrowId" prefWidth="75.0" text="ID">
                <graphic>
@@ -20,7 +23,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-          <TableColumn fx:id="colBookName" prefWidth="196.0" text="Tên sách">
+          <TableColumn fx:id="colBookName" prefWidth="196.0" text="Book Name">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -29,7 +32,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colBorrowDate" prefWidth="194.22222900390625" text="Ngày mượn">
+            <TableColumn fx:id="colBorrowDate" prefWidth="194.22222900390625" text="Borrow Date">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -38,7 +41,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colReturnDate" prefWidth="167.11111450195312" text="Ngày hẹn trả">
+            <TableColumn fx:id="colReturnDate" prefWidth="167.11111450195312" text="Return Appointment">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -47,7 +50,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colDueDate" prefWidth="144.0" text="Ngày trả">
+            <TableColumn fx:id="colDueDate" prefWidth="144.0" text="Return Date">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -58,6 +61,12 @@
             </TableColumn>
         </columns>
       </TableView>
-      <Button fx:id="btnReturn" layoutX="351.0" layoutY="321.0" mnemonicParsing="false" onAction="#onClickReturn" text="Trả sách" />
+      <Button fx:id="btnReturn" layoutX="350.0" layoutY="376.0" mnemonicParsing="false" onAction="#onClickReturn" text="Return book" />
+      <Label layoutX="66.0" layoutY="30.0" text="Search:">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtSearch" layoutX="130.0" layoutY="22.0" onKeyPressed="#onSearch" prefHeight="36.0" prefWidth="220.0" />
    </children>
 </AnchorPane>
