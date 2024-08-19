@@ -17,7 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import lombok.Setter;
 import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
+
 
 import java.net.URL;
 import java.util.List;

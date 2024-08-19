@@ -25,8 +25,10 @@ import java.util.ResourceBundle;
 import static com.example.library.common.Regex.isValid;
 
 public class BookManagementController implements Initializable {
-    public Button btnRequestBorrow;
-    public DatePicker dpReturn;
+    @FXML
+    private Button btnRequestBorrow;
+    @FXML
+    private DatePicker dpReturn;
     @FXML
     private GridPane grForReader;
     @FXML

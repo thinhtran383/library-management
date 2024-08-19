@@ -16,7 +16,6 @@ import java.util.UUID;
 
 
 public class AccountServiceImpl implements IAccountService {
-
     private final IAccountRepository accountRepository;
     private final IReaderRepository readerRepository;
     private final MailService mailService;
