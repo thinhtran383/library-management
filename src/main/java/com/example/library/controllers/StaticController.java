@@ -44,7 +44,7 @@ public class StaticController implements Initializable {
         txtTotalLate.setText(String.valueOf(staticService.getTotalLate()));
         txtNumberReturn.setText(String.valueOf(staticService.getTotalReturn()));
 
-
+        txtNumberReturn.setVisible(false);
         taNumberReturn.setVisible(false);
         drawChart();
     }
