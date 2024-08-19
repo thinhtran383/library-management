@@ -100,7 +100,6 @@ public class BookServiceImpl implements IBookService {
         book.setCategory(categoryId);
         book.setAuthor(authorId);
 
-        System.out.println(book);
 
     }
 
