@@ -95,7 +95,7 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
                         update borrow
                         set dueDate = '%s'
                         where bookId = '%s' and readerId = '%s' and dueDate is null;
-                        """,LocalDate.now(), borrow.getBookId(),borrow.getReaderId()
+                        """, LocalDate.now(), borrow.getBookId(), borrow.getReaderId()
         );
 
         dbConnect.executeUpdate(sql);

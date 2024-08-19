@@ -24,9 +24,12 @@ import java.util.*;
 import static com.example.library.common.Regex.isValid;
 
 public class ReaderManagementController implements Initializable {
-    public TextField txtUsername;
-    public CheckBox isBlock;
-    public TableColumn colUsername;
+    @FXML
+    private TextField txtUsername;
+    @FXML
+    private CheckBox isBlock;
+    @FXML
+    private TableColumn colUsername;
     @FXML
     private TextField txtSearch;
     @FXML
@@ -67,6 +70,7 @@ public class ReaderManagementController implements Initializable {
     private final IReaderService readerService;
     private final IAccountService accountService;
     private final MailService mailService;
+
     public ReaderManagementController() {
         this.readerService = new ReaderServiceImpl();
         this.accountService = new AccountServiceImpl();
@@ -122,7 +126,7 @@ public class ReaderManagementController implements Initializable {
         String email = txtEmail.getText();
         String phoneNumber = txtPhoneNumber.getText();
         String address = txtAddress.getText();
-        String dob = dpDob.getValue() == null  ? "" : dpDob.getValue().toString();
+        String dob = dpDob.getValue() == null ? "" : dpDob.getValue().toString();
         String username = txtUsername.getText();
 
         if (isNull(readerId, readerName, email, phoneNumber, address, dob, username)) {
@@ -148,7 +152,7 @@ public class ReaderManagementController implements Initializable {
                 .readerAddress(address)
                 .build();
 
-        String password = UUID.randomUUID().toString().substring(0,8);
+        String password = UUID.randomUUID().toString().substring(0, 8);
 
         Account account = Account.builder()
                 .username(username)

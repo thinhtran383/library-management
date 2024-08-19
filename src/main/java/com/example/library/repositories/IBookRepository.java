@@ -1,6 +1,5 @@
 package com.example.library.repositories;
 
-import com.example.library.models.Author;
 import com.example.library.models.Book;
 import javafx.collections.ObservableList;
 

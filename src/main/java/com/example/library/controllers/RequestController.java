@@ -8,6 +8,7 @@ import com.example.library.utils.UserContext;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,19 +21,29 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class RequestController implements Initializable {
-    public TableColumn colSelect;
-
+    @FXML
+    private TableColumn colSelect;
+    @FXML
     private final IBorrowService borrowService;
-    public TableColumn<Borrow, Integer> colId;
-    public TableView<Borrow> tbRequest;
-    public TableColumn colReaderName;
-    public TableColumn colBookName;
-    public TableColumn colBorrowDate;
-    public TableColumn colReturnDate;
-    public Button btnApprove;
-    public TextField txtSearch;
-    public Button btnReject;
-    private List<String> selectedBorrowId;
+    @FXML
+    private TableColumn<Borrow, Integer> colId;
+    @FXML
+    private TableView<Borrow> tbRequest;
+    @FXML
+    private TableColumn colReaderName;
+    @FXML
+    private TableColumn colBookName;
+    @FXML
+    private TableColumn colBorrowDate;
+    @FXML
+    private TableColumn colReturnDate;
+    @FXML
+    private Button btnApprove;
+    @FXML
+    private TextField txtSearch;
+    @FXML
+    private Button btnReject;
+    private final List<String> selectedBorrowId;
     private final MailService mailService;
 
     public RequestController() {

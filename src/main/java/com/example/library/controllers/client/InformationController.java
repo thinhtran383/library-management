@@ -7,6 +7,7 @@ import com.example.library.services.impl.ReaderServiceImpl;
 import com.example.library.utils.AlertUtil;
 import com.example.library.utils.UserContext;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
@@ -14,16 +15,24 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class InformationController implements Initializable {
-    public Button btnUpdate;
-    public TextField txtEmail;
-    public TextField txtPhoneNumber;
-    public DatePicker dpDob;
-    public TextField txtReaderId;
-    public TextField txtFullname;
-    public TextField txtAddress;
+    @FXML
+    private Button btnUpdate;
+    @FXML
+    private TextField txtEmail;
+    @FXML
+    private TextField txtPhoneNumber;
+    @FXML
+    private DatePicker dpDob;
+    @FXML
+    private TextField txtReaderId;
+    @FXML
+    private TextField txtFullname;
+    @FXML
+    private TextField txtAddress;
+    @FXML
+    private Button btnSave;
 
     private final IReaderService readerService;
-    public Button btnSave;
 
     public InformationController() {
         this.readerService = new ReaderServiceImpl();
@@ -76,12 +85,12 @@ public class InformationController implements Initializable {
     }
 
     public void onClickSave(ActionEvent actionEvent) {
-        if(!Regex.isValid("EMAIL", txtEmail.getText())) {
+        if (!Regex.isValid("EMAIL", txtEmail.getText())) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Email is invalid");
             return;
         }
 
-        if(!Regex.isValid("PHONE_NUMBER", txtPhoneNumber.getText())) {
+        if (!Regex.isValid("PHONE_NUMBER", txtPhoneNumber.getText())) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Phone number is invalid");
             return;
         }

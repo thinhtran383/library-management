@@ -9,33 +9,29 @@ import java.sql.Statement;
 public class DbConnect { // singleton pattern
     private static DbConnect instance;
 
-    private final static String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/library";
-    private final static String username = "root";
-    private final static String password = "Thinh@123";
+    private final static String JDBC_URL = "jdbc:mysql://127.0.0.1:3306/library";
+    private final static String USERNAME = "root";
+    private final static String PASSWORD = "Thinh@123";
 
     private Connection connection;
 
     private DbConnect() {
         try {
-            connection = DriverManager.getConnection(jdbcUrl, username, password);
+            connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public static DbConnect getInstance() {
-        if(instance == null) {
-            synchronized (DbConnect.class) {
-                if (instance == null) {
-                    instance = new DbConnect();
-                }
-            }
+        if (instance == null) {
+            instance = new DbConnect();
         }
         return instance;
     }
 
     public ResultSet executeQuery(String sql) { // nhung cau query co tra ve gia tri select
-        try  {
+        try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
             return resultSet;

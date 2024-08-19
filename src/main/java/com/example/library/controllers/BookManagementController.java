@@ -400,7 +400,7 @@ public class BookManagementController implements Initializable {
             return;
         }
 
-        if(selectedBook.getQuantity() == 0){
+        if (selectedBook.getQuantity() == 0) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "This book is out of stock!");
             return;
         }

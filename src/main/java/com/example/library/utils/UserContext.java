@@ -37,7 +37,7 @@ public class UserContext {
         return username;
     }
 
-    public void clearContext(){
+    public void clearContext() {
         this.role = "";
         this.readerId = "";
         this.username = "";

@@ -313,7 +313,7 @@ public class BookRepositoryImpl implements IBookRepository {
         ResultSet rs = DbConnect.getInstance().executeQuery(sql);
 
         try {
-            if(rs.next()){
+            if (rs.next()) {
                 return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {

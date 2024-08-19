@@ -3,8 +3,7 @@ package com.example.library.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.Provider;
-import java.security.Security;
+
 
 public class PasswordHasher {
 
@@ -25,14 +24,5 @@ public class PasswordHasher {
         }
     }
 
-    public static void main(String[] args) {
-        String password = "thinh123";
-        String hashedPassword = hashPassword(password);
-        System.out.println("Hashed Password: " + hashedPassword);
 
-        Provider[] providers = Security.getProviders();
-        for (Provider provider : providers) {
-            System.out.println(provider.getName() + " " + provider.getVersion());
-        }
-    }
 }

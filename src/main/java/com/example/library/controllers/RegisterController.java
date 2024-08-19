@@ -55,7 +55,7 @@ public class RegisterController {
 
 
         if (username.isEmpty() || password.isEmpty() || rePassword.isEmpty() ||
-                fullname.isEmpty() || email.isEmpty() || phoneNumber.isEmpty() || address.isEmpty() || dob.isEmpty()){
+                fullname.isEmpty() || email.isEmpty() || phoneNumber.isEmpty() || address.isEmpty() || dob.isEmpty()) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "All fields are required!");
             return;
         }
@@ -95,7 +95,7 @@ public class RegisterController {
             } else {
                 AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, "Signup failed, username is already taken!");
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, e.getMessage());
         }
     }

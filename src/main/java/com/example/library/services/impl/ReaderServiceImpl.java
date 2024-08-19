@@ -9,8 +9,6 @@ import javafx.collections.ObservableList;
 import java.util.Optional;
 import java.util.UUID;
 
-import java.util.Optional;
-
 public class ReaderServiceImpl implements IReaderService {
     private final IReaderRepository readerRepository;
 

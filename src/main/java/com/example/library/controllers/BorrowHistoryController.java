@@ -20,7 +20,6 @@ import lombok.extern.java.Log;
 
 
 import java.net.URL;
-import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -95,7 +94,7 @@ public class BorrowHistoryController implements Initializable {
 
     public void onSearch(KeyEvent keyEvent) {
         String keyword = txtSearch.getText();
-        if(keyword.isEmpty()){
+        if (keyword.isEmpty()) {
             tbBorrows.setItems(borrowService.getBorrowByReaderId(readerId));
             return;
         }

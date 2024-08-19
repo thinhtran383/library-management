@@ -49,7 +49,7 @@ public class DashboardController implements Initializable {
         }
 
         if (role.equalsIgnoreCase("librarian")) {
-            lstMenu.getItems().addAll("Information","Book management", "Reader management", "Request management", "Return book","Statistical");
+            lstMenu.getItems().addAll("Information", "Book management", "Reader management", "Request management", "Return book", "Statistical");
         }
 
         lstMenu.getSelectionModel().selectFirst();

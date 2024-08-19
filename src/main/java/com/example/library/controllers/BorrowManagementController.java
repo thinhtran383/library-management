@@ -106,7 +106,7 @@ public class BorrowManagementController implements Initializable {
     }
 
     private void initComboBox() {
-        cbFilterLate.getItems().addAll("Quá hạn", "Chưa trả","Đã trả", "Không");
+        cbFilterLate.getItems().addAll("Quá hạn", "Chưa trả", "Đã trả", "Không");
         cbFilterLate.getSelectionModel().selectLast();
         cbBookId.getItems().addAll(bookService.getAllBookId());
         cbReaderId.getItems().addAll(readerService.getAllReaderId());
@@ -153,17 +153,17 @@ public class BorrowManagementController implements Initializable {
 
     public void onClickBorrow(ActionEvent actionEvent) {
 
-        if(isNull(cbReaderId.getValue(), cbBookId.getValue(), dpReturnDate.getValue())){
+        if (isNull(cbReaderId.getValue(), cbBookId.getValue(), dpReturnDate.getValue())) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Vui lòng chọn độc giả, sách và ngày trả");
             return;
         }
 
-        if(borrowService.getTotalBorrowByReaderId(cbReaderId.getValue()) >= 3){
+        if (borrowService.getTotalBorrowByReaderId(cbReaderId.getValue()) >= 3) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Độc giả đã mượn quá số lượng cho phép (<=3)");
             return;
         }
 
-        if(!bookService.isQuantityEnough(cbBookId.getValue())){
+        if (!bookService.isQuantityEnough(cbBookId.getValue())) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Số lượng sách không đủ");
             return;
         }

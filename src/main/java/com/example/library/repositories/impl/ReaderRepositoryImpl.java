@@ -297,7 +297,7 @@ public class ReaderRepositoryImpl implements IReaderRepository {
         return null;
     }
 
-    public boolean existsByEmailAndNotId(String email, String id){
+    public boolean existsByEmailAndNotId(String email, String id) {
         String sql = String.format("""
                 SELECT COUNT(*) FROM readers WHERE readerEmail = '%s' AND readerId <> '%s';
                 """, email, id);
@@ -314,7 +314,7 @@ public class ReaderRepositoryImpl implements IReaderRepository {
         return false;
     }
 
-    public boolean existsByPhoneAndNotId(String phone, String id){
+    public boolean existsByPhoneAndNotId(String phone, String id) {
         String sql = String.format("""
                 SELECT COUNT(*) FROM readers WHERE readerPhoneNumber = '%s' AND readerId <> '%s';
                 """, phone, id);

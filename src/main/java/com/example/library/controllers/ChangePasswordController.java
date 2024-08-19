@@ -6,13 +6,17 @@ import com.example.library.services.IAccountService;
 import com.example.library.utils.AlertUtil;
 import com.example.library.utils.UserContext;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 
 public class ChangePasswordController {
-    public PasswordField pwCur;
-    public PasswordField pwNew;
-    public PasswordField pwReEnter;
+    @FXML
+    private PasswordField pwCur;
+    @FXML
+    private PasswordField pwNew;
+    @FXML
+    private PasswordField pwReEnter;
 
     private final IAccountService accountService;
 
@@ -38,7 +42,7 @@ public class ChangePasswordController {
 
         try {
             accountService.changPassword(account, newPassword);
-            AlertUtil.showAlert(Alert.AlertType.INFORMATION,"Information",null,"Change password successfully!");
+            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Information", null, "Change password successfully!");
 
         } catch (Exception e) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, e.getMessage());

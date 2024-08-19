@@ -112,7 +112,6 @@ public class AccountRepositoryImpl implements IAccountRepository {
     }
 
 
-
     public Reader getInformation(String username) {
         String sql = String.format("""
                 select r.* from readers r
@@ -141,7 +140,7 @@ public class AccountRepositoryImpl implements IAccountRepository {
     }
 
     @Override
-    public int getUserIdByUsername(String username){
+    public int getUserIdByUsername(String username) {
         String sql = String.format("""
                 select userId from users where username = '%s'
                 """, username);
@@ -149,7 +148,7 @@ public class AccountRepositoryImpl implements IAccountRepository {
         ResultSet rs = dbConnect.executeQuery(sql);
 
         try {
-            if(rs.next()){
+            if (rs.next()) {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {

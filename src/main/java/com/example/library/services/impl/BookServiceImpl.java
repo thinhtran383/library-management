@@ -48,10 +48,10 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public void saveBook(Book book) throws Exception{
+    public void saveBook(Book book) throws Exception {
         boolean isExist = bookRepository.isExistBook(book.getBookId());
 
-        if(isExist){
+        if (isExist) {
             throw new Exception("This book already existed");
         }
 

@@ -1,6 +1,5 @@
 package com.example.library.services.impl;
 
-import com.example.library.models.Book;
 import com.example.library.models.Borrow;
 import com.example.library.repositories.*;
 import com.example.library.repositories.impl.BookRepositoryImpl;
@@ -11,7 +10,6 @@ import com.example.library.utils.UserContext;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -83,7 +81,7 @@ public class BorrowServiceImpl implements IBorrowService {
     @Override
     public void requestBorrow(String bookId, LocalDate returnDate) throws Exception {
         boolean isBorrowed = borrowRepository.isAlreadyRequest(UserContext.getInstance().getReaderId(), bookId);
-        if(isBorrowed) {
+        if (isBorrowed) {
             throw new Exception("You have already requested this book");
         }
         borrowRepository.requestBorrow(bookId, returnDate);
@@ -134,10 +132,6 @@ public class BorrowServiceImpl implements IBorrowService {
 
         bookIds.forEach(bookRepository::decreaseQuantity);
     }
-
-
-
-
 
 
 }
