@@ -81,14 +81,23 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
     }
 
     @Override
-    public void returnBook(String borrowId) {
+    public void returnBook(Borrow borrow) {
+//        String sql = String.format(
+//                """
+//                        update borrow
+//                        set dueDate = '%s'
+//                        where borrowId = '%s';
+//                        """, LocalDate.now(), borrowId
+//        );
+
         String sql = String.format(
                 """
                         update borrow
                         set dueDate = '%s'
-                        where borrowId = '%s';
-                        """, LocalDate.now(), borrowId
+                        where bookId = '%s' and readerId = '%s' and dueDate is null;
+                        """,LocalDate.now(), borrow.getBookId(),borrow.getReaderId()
         );
+
         dbConnect.executeUpdate(sql);
     }
 

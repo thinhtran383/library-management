@@ -18,6 +18,7 @@ public class Borrow {
     private LocalDate returnDate;
     private String dueDate;
     private String status;
+    private String bookId;
 
 
 

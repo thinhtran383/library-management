@@ -49,9 +49,9 @@ public class BorrowServiceImpl implements IBorrowService {
 
     @Override
     public void returnBook(Borrow borrow) {
-        borrowRepository.returnBook(borrow.getBorrowId());
-        String bookId = bookRepository.getBookIdByName(borrow.getBookName());
-        bookRepository.increaseQuantity(bookId);
+        borrowRepository.returnBook(borrow);
+
+        bookRepository.increaseQuantity(borrow.getBookId());
     }
 
     @Override
