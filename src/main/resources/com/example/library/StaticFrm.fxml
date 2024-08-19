@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -26,17 +27,17 @@
             <Font size="35.0" />
          </font>
       </Text>
-      <Label layoutX="35.0" layoutY="122.0" text="Khách hàng">
+      <Label layoutX="35.0" layoutY="122.0" text="Reader">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="240.0" layoutY="122.0" text="Số sách hiện tại">
+      <Label layoutX="240.0" layoutY="122.0" text="Total Book">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="453.0" layoutY="122.0" text="Tổng số lượt mượn">
+      <Label layoutX="453.0" layoutY="122.0" text="Total Borrow">
          <font>
             <Font size="16.0" />
          </font>
@@ -47,12 +48,12 @@
             <Font size="35.0" />
          </font>
       </Text>
-      <Label layoutX="665.0" layoutY="122.0" text="Sách mượn quá hạn">
+      <Label layoutX="665.0" layoutY="122.0" text="Total Late">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <TextArea layoutX="24.0" layoutY="200.0" onMouseClicked="#onClickReturnOnTime" prefHeight="102.0" prefWidth="189.0" style="-fx-background-color: #629c6b;" />
+      <TextArea fx:id="taNumberReturn" layoutX="24.0" layoutY="200.0" onMouseClicked="#onClickReturnOnTime" prefHeight="102.0" prefWidth="189.0" style="-fx-background-color: #629c6b;" />
       <Text fx:id="txtNumberReturn" layoutX="37.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="117.5">
          <font>
             <Font size="35.0" />
@@ -63,5 +64,6 @@
             <Font size="16.0" />
          </font>
       </Label>
+      <PieChart fx:id="pieLate" layoutX="203.0" layoutY="310.0" prefHeight="383.0" prefWidth="500.0" />
    </children>
 </AnchorPane>
