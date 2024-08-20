@@ -10,7 +10,7 @@ import java.util.Map;
 public interface IBorrowService {
     ObservableList<Borrow> getBorrowByReaderId(String readerId);
     ObservableList<Borrow> getAllBookBorrowed();
-    void returnBook(Borrow borrow);
+    void returnBook(Borrow borrow) throws Exception;
     void borrowBook(Borrow borrow);
     int getTotalBorrowByReaderId(String readerId);
     boolean isReaderLate(String readerId);
@@ -22,4 +22,5 @@ public interface IBorrowService {
     List<String> getAllEmailByBorrowIds(List<String> borrowIds);
     Map<String, String> getAllEmailWithMessagesByBorrowIds(List<String> borrowIds);
     void declineRequest(List<String> borrowId);
+    void updateBorrowDate(List<String> borrowId);
 }

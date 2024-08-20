@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="456.0" prefWidth="777.0" stylesheets="@../../../primer-light.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.BorrowHistoryController">
+<AnchorPane prefHeight="456.0" prefWidth="961.0" stylesheets="@../../../primer-light.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.BorrowHistoryController">
    <children>
-      <TableView fx:id="tbBorrows" layoutX="-2.0" layoutY="78.0" prefHeight="279.0" prefWidth="777.0">
+      <TableView fx:id="tbBorrows" layoutX="-2.0" layoutY="78.0" prefHeight="279.0" prefWidth="958.0">
         <columns>
           <TableColumn fx:id="colBorrowId" prefWidth="75.0" text="ID">
                <graphic>
@@ -26,7 +26,16 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-          <TableColumn fx:id="colBookName" prefWidth="196.0" text="Book Name">
+            <TableColumn fx:id="colBookId" prefWidth="141.5" text="Book ID">
+                <graphic>
+                    <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../../../img/tabel.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
+            </TableColumn>
+          <TableColumn fx:id="colBookName" prefWidth="186.5" text="Book Name">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -35,7 +44,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colBorrowDate" prefWidth="194.22222900390625" text="Borrow Date">
+            <TableColumn fx:id="colBorrowDate" prefWidth="149.5" text="Borrow Date">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -44,7 +53,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colReturnDate" prefWidth="167.11111450195312" text="Return Appointment">
+            <TableColumn fx:id="colReturnDate" prefWidth="188.0" text="Return Appointment">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -53,7 +62,7 @@
                   </ImageView>
                </graphic>
             </TableColumn>
-            <TableColumn fx:id="colDueDate" prefWidth="144.0" text="Return Date">
+            <TableColumn fx:id="colDueDate" prefWidth="215.5" text="Return Date">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
                      <image>

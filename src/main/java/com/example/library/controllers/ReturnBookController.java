@@ -35,7 +35,12 @@ public class ReturnBookController {
                 .readerId(readerId)
                 .build();
 
-        borrowService.returnBook(borrow);
+        try {
+            borrowService.returnBook(borrow);
+        } catch (Exception e) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Error", null, e.getMessage());
+            return;
+        }
 
         AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Information", null, "Return book successfully");
 

@@ -26,6 +26,8 @@ import java.util.ResourceBundle;
 @Log
 public class BorrowHistoryController implements Initializable {
     @FXML
+    private TableColumn colBookId;
+    @FXML
     private TextField txtSearch;
     @FXML
     private Button btnReturn;
@@ -67,6 +69,7 @@ public class BorrowHistoryController implements Initializable {
         colBorrowDate.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
         colReturnDate.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
         colDueDate.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
+        colBookId.setCellValueFactory(new PropertyValueFactory<>("bookId"));
 
         tbBorrows.setItems(borrowService.getBorrowByReaderId(readerId));
 
@@ -87,7 +90,11 @@ public class BorrowHistoryController implements Initializable {
         Optional<Borrow> selectedBorrow = Optional.ofNullable(tbBorrows.getSelectionModel().getSelectedItem());
 
         selectedBorrow.ifPresent(borrow -> {
-            borrowService.returnBook(borrow);
+            try {
+                borrowService.returnBook(borrow);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             tbBorrows.setItems(borrowService.getBorrowByReaderId(readerId));
         });
     }

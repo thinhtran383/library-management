@@ -22,6 +22,8 @@ import java.util.ResourceBundle;
 
 public class RequestController implements Initializable {
     @FXML
+    private TableColumn colBookId;
+    @FXML
     private TableColumn colSelect;
     @FXML
     private final IBorrowService borrowService;
@@ -56,6 +58,7 @@ public class RequestController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setDataToTable();
 
+
         if (UserContext.getInstance().getRole().equals("Reader")) {
             setUpForReader();
         } else {
@@ -70,6 +73,7 @@ public class RequestController implements Initializable {
         colId.setCellValueFactory(cellData -> new SimpleIntegerProperty(tbRequest.getItems().indexOf(cellData.getValue()) + 1).asObject());
         colReaderName.setCellValueFactory(new PropertyValueFactory<>("readerName"));
         colBookName.setCellValueFactory(new PropertyValueFactory<>("bookName"));
+        colBookId.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         colBorrowDate.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
         colReturnDate.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
         colSelect.setCellFactory(tc -> new TableCell<Borrow, Boolean>() {

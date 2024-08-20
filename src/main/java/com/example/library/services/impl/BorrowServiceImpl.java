@@ -46,7 +46,13 @@ public class BorrowServiceImpl implements IBorrowService {
     }
 
     @Override
-    public void returnBook(Borrow borrow) {
+    public void returnBook(Borrow borrow) throws Exception {
+        boolean isBorrow = borrowRepository.isAlreadyRequest(borrow.getReaderId(), borrow.getBookId());
+
+        if(!isBorrow) {
+            throw new Exception("This book is not borrowed by this reader");
+        }
+
         borrowRepository.returnBook(borrow);
 
         bookRepository.increaseQuantity(borrow.getBookId());
@@ -124,9 +130,15 @@ public class BorrowServiceImpl implements IBorrowService {
     }
 
     @Override
+    public void updateBorrowDate(List<String> borrowId) {
+        borrowRepository.updateBorrowDate(borrowId);
+    }
+
+    @Override
     public void approveRequest(List<String> borrowIds) {
         borrowRepository.approveRequest(borrowIds);
 
+        updateBorrowDate(borrowIds);
 
         List<String> bookIds = borrowRepository.getAllBookIdByBorrowId(borrowIds);
 
