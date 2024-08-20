@@ -204,7 +204,7 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
     public boolean isReaderLate(String readerId) {
         String sql = String.format("""
                 select count(*) from borrow
-                where dueDate is null and returnDate < now() and readerId = '%s' and status = 'REQUEST';
+                where dueDate is null and returnDate < now() and readerId = '%s' and status is null;
                 """, readerId);
         ResultSet rs = dbConnect.executeQuery(sql);
         try {
