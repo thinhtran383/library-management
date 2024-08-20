@@ -340,7 +340,7 @@ public class BookManagementController implements Initializable {
             txtAuthor.clear();
             btnAddAuthor.setText("Add Author");
             cbAuthor.getItems().clear();
-            cbAuthor.getItems().addAll();
+            bookService.getAllAuthors().forEach(author -> cbAuthor.getItems().add(author.getAuthorName()));
         } else {
             txtAuthor.setVisible(true);
             cbAuthor.setVisible(false);
@@ -367,6 +367,24 @@ public class BookManagementController implements Initializable {
         txtQuantity.clear();
         dpPublish.setValue(null);
         cbAuthor.setValue(null);
+        cbCategory.setValue(null);
+
+        txtAuthor.clear();
+        txtCategory.clear();
+
+        btnAddAuthor.setText("Add Author");
+        btnAddCategory.setText("Add Category");
+
+        txtCategory.setVisible(false);
+        txtAuthor.setVisible(false);
+
+        cbCategory.setVisible(true);
+        cbAuthor.setVisible(true);
+
+        isAddingAuthor = false;
+        isAddingCategory = false;
+
+
         tbBooks.getSelectionModel().clearSelection();
 
 //        btnAdd.setVisible(true);
