@@ -8,5 +8,5 @@ public interface IAccountService {
     boolean registerAccount(Account account, Reader reader) throws Exception;
     boolean isBlocked(String username);
     void resetPassword(String email) throws Exception;
-    void changPassword(Account account, String newPassword) throws Exception;
+    void changePassword(Account account, String newPassword) throws Exception;
 }

@@ -41,7 +41,7 @@ public class ChangePasswordController {
                 .build();
 
         try {
-            accountService.changPassword(account, newPassword);
+            accountService.changePassword(account, newPassword);
             AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Information", null, "Change password successfully!");
 
         } catch (Exception e) {

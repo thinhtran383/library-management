@@ -306,7 +306,7 @@ public class BorrowRepositoryImpl implements IBorrowRepository {
                 WHERE br.borrowId IN (%s)
                 """.formatted(borrowIds.stream().map(id -> "'" + id + "'").collect(Collectors.joining(",")));
 
-        ResultSet rs = DbConnect.getInstance().executeQuery(sql);
+        ResultSet rs = dbConnect.executeQuery(sql);
         Map<String, Map<String, List<Map<String, String>>>> emailBooksStatusMap = new HashMap<>();
 
         try {

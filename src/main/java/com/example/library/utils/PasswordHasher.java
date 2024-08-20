@@ -24,5 +24,9 @@ public class PasswordHasher {
         }
     }
 
+    public static void main(String[] args) {
+        System.out.println(PasswordHasher.hashPassword("2"));
+    }
+
 
 }

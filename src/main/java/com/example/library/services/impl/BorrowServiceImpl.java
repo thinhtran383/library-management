@@ -49,7 +49,7 @@ public class BorrowServiceImpl implements IBorrowService {
     public void returnBook(Borrow borrow) throws Exception {
         boolean isBorrow = borrowRepository.isAlreadyRequest(borrow.getReaderId(), borrow.getBookId());
 
-        if(!isBorrow) {
+        if (!isBorrow) {
             throw new Exception("This book is not borrowed by this reader");
         }
 
@@ -127,6 +127,8 @@ public class BorrowServiceImpl implements IBorrowService {
     @Override
     public void declineRequest(List<String> borrowId) {
         borrowRepository.declineRequest(borrowId);
+
+
     }
 
     @Override

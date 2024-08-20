@@ -7,6 +7,7 @@ import com.example.library.repositories.IAccountRepository;
 import com.example.library.repositories.IReaderRepository;
 import com.example.library.repositories.impl.ReaderRepositoryImpl;
 import com.example.library.services.IAccountService;
+import com.example.library.utils.PasswordHasher;
 import com.example.library.utils.UserContext;
 
 import java.util.Map;
@@ -34,7 +35,11 @@ public class AccountServiceImpl implements IAccountService {
         Optional<Account> accountFromDb = accountRepository.getAccountAndRoleByUsername(account.getUsername());
         if (accountFromDb.isPresent()) {
             Account accountGet = accountFromDb.get();
-            return account.getPassword().equals(accountGet.getPassword()) && account.getRole().equalsIgnoreCase(accountGet.getRole());
+
+            String hashedPassword = PasswordHasher.hashPassword(account.getPassword());
+
+            return hashedPassword.equals(accountGet.getPassword())
+                    && account.getRole().equalsIgnoreCase(accountGet.getRole());
         }
 
         return false;
@@ -52,6 +57,8 @@ public class AccountServiceImpl implements IAccountService {
         if (isExistReaderPhoneNumber || isExistReaderEmail) {
             throw new IllegalArgumentException("Phone number or email already exists");
         }
+
+        account.setPassword(PasswordHasher.hashPassword(account.getPassword()));
 
         accountRepository.save(account);
 
@@ -84,17 +91,19 @@ public class AccountServiceImpl implements IAccountService {
                     "Reset password"
 
             );
-
-            accountRepository.save(new Account(username, password, "reader"));
+            String passwordHash = PasswordHasher.hashPassword(password);
+            accountRepository.save(new Account(username, passwordHash, "reader"));
         }
     }
 
     @Override
-    public void changPassword(Account account, String newPassword) throws Exception {
+    public void changePassword(Account account, String newPassword) throws Exception {
         Account existAccount = accountRepository.getAccountAndRoleByUsername(account.getUsername())
                 .orElseThrow();
 
-        if (existAccount.getPassword().equals(account.getPassword())) {
+        String oldPasswordHash = PasswordHasher.hashPassword(account.getPassword());
+        if (existAccount.getPassword().equals(oldPasswordHash)) {
+            newPassword = PasswordHasher.hashPassword(newPassword);
             accountRepository.save(new Account(account.getUsername(), newPassword, UserContext.getInstance().getRole()));
 
         } else {
