@@ -28,3 +28,4 @@
       <Hyperlink layoutX="381.0" layoutY="281.0" onAction="#onClickResetPassword" text="Forgot your password?" />
    </children>
 </AnchorPane>
+

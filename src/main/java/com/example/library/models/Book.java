@@ -6,7 +6,6 @@ import java.time.LocalDate;
 
 @Setter
 @Getter
-@RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
 @ToString
@@ -17,7 +16,5 @@ public class Book {
     private String category;
     private int quantity;
     private LocalDate publisher;
-    
-    
-    
+
 }

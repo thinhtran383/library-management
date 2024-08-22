@@ -75,7 +75,6 @@ public class AccountServiceImpl implements IAccountService {
     public void resetPassword(String email) throws Exception {
         Map<String, String> account = accountRepository.getAccountInfoByEmail(email);
 
-        System.out.println(account);
 
         if (account == null) {
             throw new Exception("Email not found");

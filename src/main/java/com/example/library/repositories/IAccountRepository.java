@@ -12,5 +12,4 @@ public interface IAccountRepository {
     boolean isBlocked(String username);
     Map<String, String> getAccountInfoByEmail(String email);
     int getUserIdByUsername(String username);
-
 }

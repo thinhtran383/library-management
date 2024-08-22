@@ -32,6 +32,8 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        System.out.println("DashboardController");
+
 //        lstMenu.getItems().addAll("Quản lý sách", "Quản lý độc giả", "Quản lý mượn trả", "Thống kê");
 //        lstMenu.getSelectionModel().selectFirst();
 //        loadPane(lstMenu.getSelectionModel().getSelectedItem());
@@ -87,6 +89,7 @@ public class DashboardController implements Initializable {
             case "Return book":
                 frm = "/com/example/library/ReturnFrm.fxml";
                 break;
+
             // client
             case "Available book":
                 frm = "/com/example/library/BookManagementFrm.fxml";

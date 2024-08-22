@@ -19,6 +19,5 @@ public interface IBookRepository {
     int getTotalBook();
     String getBookId();
     int getBookQuantity(String bookId);
-
     boolean isExistBook(String bookId);
 }

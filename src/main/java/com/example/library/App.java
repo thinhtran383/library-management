@@ -1,5 +1,6 @@
 package com.example.library;
 
+import com.example.library.models.Account;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;

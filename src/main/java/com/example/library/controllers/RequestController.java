@@ -4,6 +4,7 @@ import com.example.library.models.Borrow;
 import com.example.library.services.IBorrowService;
 import com.example.library.services.impl.BorrowServiceImpl;
 import com.example.library.services.impl.MailService;
+import com.example.library.utils.AlertUtil;
 import com.example.library.utils.UserContext;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
@@ -120,6 +121,12 @@ public class RequestController implements Initializable {
     }
 
     public void onClickApprove(ActionEvent actionEvent) {
+        if(selectedBorrowId.isEmpty()){
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "No Request Selected", null,"Please select a request to approve");
+            return;
+        }
+
+
         Map<String, String> emailMessages = borrowService.getAllEmailWithMessagesByBorrowIds(selectedBorrowId);
 
         mailService.sendMail(
@@ -130,9 +137,16 @@ public class RequestController implements Initializable {
 
         borrowService.approveRequest(selectedBorrowId);
         setDataToTable();
+        AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Request Approved", null,"Request Approved Successfully");
+        selectedBorrowId.clear();
     }
 
     public void onClickReject(ActionEvent actionEvent) {
+        if(selectedBorrowId.isEmpty()){
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "No Request Selected", null,"Please select a request to reject");
+            return;
+        }
+
         borrowService.declineRequest(selectedBorrowId);
 
         Map<String, String> emailMessages = borrowService.getAllEmailWithMessagesByBorrowIds(selectedBorrowId);
@@ -145,11 +159,30 @@ public class RequestController implements Initializable {
 
         setDataToTable();
         borrowService.deleteRequest(selectedBorrowId);
+
+        AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Request Declined", null,"Request Declined Successfully");
+        selectedBorrowId.clear();
     }
 
     public void onClickDeleteRequest(ActionEvent actionEvent) {
+        if(selectedBorrowId.isEmpty()){
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "No Request Selected", null,"Please select a request to delete");
+            return;
+        }
+
+        if(!AlertUtil.showConfirmation("Are you sure you want to delete this request?")){
+            return;
+        }
+
+
         borrowService.deleteRequest(selectedBorrowId);
         setDataToTable();
+
+        AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Request Deleted", null,"Request Deleted Successfully");
+
+        selectedBorrowId.clear();
+
+
     }
 
     public void onSearch(KeyEvent keyEvent) {

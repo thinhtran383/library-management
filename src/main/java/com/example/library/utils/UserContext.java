@@ -17,7 +17,7 @@ public class UserContext {
     private UserContext() {
     }
 
-    public static synchronized UserContext getInstance() {
+    public static  UserContext getInstance() {
         if (instance == null) {
             instance = new UserContext();
         }

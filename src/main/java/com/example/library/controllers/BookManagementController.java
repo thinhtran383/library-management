@@ -246,6 +246,7 @@ public class BookManagementController implements Initializable {
 
         try {
             bookService.saveBook(book);
+
             AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Information", null, "Add new book successfully!");
             tbBooks.setItems(bookService.getAllBook());
             clear();

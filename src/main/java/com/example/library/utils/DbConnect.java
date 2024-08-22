@@ -8,7 +8,6 @@ import java.sql.Statement;
 
 public class DbConnect { // singleton pattern
     private static DbConnect instance;
-
     private final static String JDBC_URL = "jdbc:mysql://127.0.0.1:3306/library";
     private final static String USERNAME = "root";
     private final static String PASSWORD = "Thinh@123";
@@ -16,6 +15,7 @@ public class DbConnect { // singleton pattern
     private Connection connection;
 
     private DbConnect() {
+        System.out.println("Create connection....");
         try {
             connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
         } catch (SQLException e) {
@@ -23,7 +23,7 @@ public class DbConnect { // singleton pattern
         }
     }
 
-    public static DbConnect getInstance() {
+    public static DbConnect getInstance() { // khoi tao doi tuong singleton
         if (instance == null) {
             instance = new DbConnect();
         }
